@@ -3,10 +3,12 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
-import os, requests, json
+import os, requests, json, random
 from django.db import connection
 from dotenv import load_dotenv
-
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.cache import cache
 
 load_dotenv()
 # Django 프로젝트 내 .env 파일에 설정되어 있어야 함
@@ -51,9 +53,6 @@ def chatbot_api(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
-
-
-
 def index(request):
 
     is_authenticated = request.session.get('is_authenticated', False)
@@ -65,7 +64,6 @@ def index(request):
     }
     return render(request, 'frontend/index.html', context)
 
-""" 
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -83,7 +81,7 @@ def login(request):
          
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT email, password FROM users WHERE email = %s",
+                    "SELECT email, password FROM test_rds_user WHERE email = %s",
                     [email]
                 )
                 user = cursor.fetchone()
@@ -94,7 +92,7 @@ def login(request):
                     'message': '존재하지 않는 회원입니다.'
                 })
             
-            if user[1] != password:
+            if not check_password(password, user[1]):
                 return JsonResponse({
                     'success': False,
                     'message': '비밀번호가 일치하지 않습니다.'
@@ -117,10 +115,10 @@ def login(request):
             })
     
     return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
-"""
+
 
 # 임시 테스트 로그임 (아무거나 입력하면 되게 함)
-@csrf_exempt
+'''@csrf_exempt
 def login(request):
     print("[LOGIN] 요청 들어옴:", request.method)
     if request.method == 'POST':
@@ -149,11 +147,85 @@ def login(request):
             })
 
     return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
-
-
-
-
+'''
 @csrf_exempt
 def logout(request):
     request.session.flush()
     return JsonResponse({'success': True})
+
+@csrf_exempt
+def send_code(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST 요청만 허용됩니다."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({"error": "잘못된 요청 형식입니다."}, status=400)
+
+    email = data.get("email")
+    if not email:
+        return JsonResponse({"error": "이메일이 필요합니다."}, status=400)
+
+    # 인증 코드 code에 로직 넣으면 됨
+    code = str(random.randint(10000000, 99999999))
+    cache.set(email, {"code": code}, timeout=300)
+
+    try:
+        send_mail(
+            subject="이메일 인증 코드",
+            message=f"인증 코드: {code}\n5분 이내에 입력해주세요.",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email],
+        )
+    except Exception as e:
+        return JsonResponse({"error": f"메일 발송 실패: {str(e)}"}, status=500)
+
+    return JsonResponse({"message": "인증 코드가 이메일로 전송되었습니다."})
+
+@csrf_exempt
+def verify_code(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST 요청만 허용됩니다."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({"error": "잘못된 요청 형식입니다."}, status=400)
+
+    email = data.get("email")
+    code = data.get("code")
+
+    record = cache.get(email)
+    if not record:
+        return JsonResponse({"error": "코드가 만료되었거나 존재하지 않습니다."}, status=400)
+
+    if record["code"] != code:
+        return JsonResponse({"error": "코드가 일치하지 않습니다."}, status=400)
+
+    cache.delete(email)
+    return JsonResponse({"message": "이메일 인증이 완료되었습니다!"})
+
+@csrf_exempt
+def check_email(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "POST 요청만 허용됩니다."}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        email = data.get("email", "").strip()
+
+        if not email:
+            return JsonResponse({"success": False, "message": "이메일이 필요합니다."}, status=400)
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM test_rds_user WHERE email = %s", [email])
+            count = cursor.fetchone()[0]
+
+        if count > 0:
+            return JsonResponse({"success": False, "message": "이미 등록된 이메일입니다."})
+        else:
+            return JsonResponse({"success": True, "message": "사용 가능한 이메일입니다."})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"오류 발생: {str(e)}"}, status=500)

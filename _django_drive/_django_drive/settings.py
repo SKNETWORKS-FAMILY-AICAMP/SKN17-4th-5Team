@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 # from pathlib import Path
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ## See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 ## SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-abacyj0ue&0l02g(i%i0)9(s2&+svsn@)_hmaf-3cw00s4lq_#"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 ## SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,35 +80,20 @@ WSGI_APPLICATION = "_django_drive.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-
-}
-
 # 임시 test비번 이메일
-""" 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'testdb',
         'USER': 'admin',
-        'PASSWORD': 'database1155', 
-        'HOST': 'database-1.ctuk8gas4juq.ap-northeast-2.rds.amazonaws.com',
+        'PASSWORD': os.getenv('DATABASES_PASSWORD'), 
+        'HOST': os.getenv('DATABASES_HOST'),
         'PORT': '3306',
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
     },
 }
-"""
-
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -130,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -156,3 +143,18 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  
 ]
+
+# 이메일 설정
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASS")
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}

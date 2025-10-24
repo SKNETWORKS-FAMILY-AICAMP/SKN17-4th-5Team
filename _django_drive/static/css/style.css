@@ -1,13 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 /* style.css - 수정된 스타일 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
 }
-
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -272,44 +268,25 @@ body {
 }
 
 .message.user {
-  align-self: flex-end;
-  background: #eeeeee;          
-  padding: 8px 20px;            /* 안쪽 여백 */
-  margin: 6px 0;                 /* 위아래 여백 */
-  border-radius: 30px;           /* 둥근 모서리 */
-  max-width: 70%;                /* 너무 긴 문장은 줄바꿈 */
-  width: fit-content;            /* 글자 길이에 맞게 자동 폭 조정 */
-  word-wrap: break-word;         /* 긴 단어 줄바꿈 */
-  margin-left: auto;             /* 오른쪽 정렬 */
-  text-align: left;              /* 내부 글자는 자연스럽게 왼쪽 정렬 */
+  background: #e3f2fd;
+  margin-left: auto;
+  text-align: right;
 }
 
 .message.bot {
-  /*background: #f5f5f5;*/
+  background: #f5f5f5;
   margin-right: auto;
 }
 
-
 /* 채팅 입력 */
-
-.chat-input-wrapper {
-  display: flex;
-  justify-content: center;  /* 가운데 정렬 */
-  padding: 10px 10px;
-}
-
-
 .chat-input {
-  width: 75%;               /* 입력창 폭 (50~70% 정도로 조정 가능) */
-  max-width: 800px;         /* 너무 넓어지지 않도록 제한 */
-  background: white;
-  border: 1px solid #e6e6e6;
-  border-radius: 30px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 7px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* 살짝 그림자 */
+  padding: 15px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 24px;
 }
 
 .chat-input input {
@@ -325,7 +302,7 @@ body {
   border: none;
   font-size: 20px;
   cursor: pointer;
-  /*padding: 8px;*/
+  padding: 8px;
 }
 
 .mic:hover {
@@ -474,5 +451,9 @@ body {
   
   .hero h1 {
     font-size: 24px;
+  }
+  
+  .modal {
+    min-width: 90%;
   }
 }

@@ -7,11 +7,21 @@ document.addEventListener('DOMContentLoaded', function(){
   const loginModal = document.getElementById('loginModal');
   const signupModal = document.getElementById('signupModal');
   const profileModal = document.getElementById('profileModal');
+  const resetPwdModal = document.getElementById('resetPwdModal');
+  const forgotPasswordBtn = document.getElementById('forgotPassword');
   const hamburger = document.getElementById('hamburger');
   const sidebar = document.querySelector('.sidebar');
   const driveToggle = document.getElementById('driveToggle');
   const driveModeLabel = document.querySelector('.drive-mode label');
   const micBtn = document.getElementById('micBtn');
+  const sendBtn = document.getElementById('sendBtn');
+  const chatInput = document.getElementById('chatInput');
+
+  // 회원가입 관련
+  const emailInput = document.getElementById('email');
+  const sendCodeBtn = document.getElementById('sendCode');
+  const codeInput = document.querySelector('input[name="code"]');
+  let emailVerified = false;
 
   // 햄버거
   if(hamburger && sidebar) {
@@ -64,6 +74,12 @@ document.addEventListener('DOMContentLoaded', function(){
   if(signupBtn) signupBtn.addEventListener('click', () => openModal(signupModal));
   if(profileBtn) profileBtn.addEventListener('click', () => openModal(profileModal));
 
+  if (forgotPasswordBtn) forgotPasswordBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeModal(loginModal);
+    openModal(resetPwdModal);
+  });
+
   // 모달 닫기 버튼
   document.querySelectorAll('.modal-close').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -90,77 +106,122 @@ document.addEventListener('DOMContentLoaded', function(){
 
   loginForm && loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     const email = loginForm.email.value.trim();
     const password = loginForm.password.value.trim();
-    
-    // 이메일 형식 검증
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(email)) {
+    if (!emailRegex.test(email)) {
       loginError.textContent = '올바른 이메일 형식이 아닙니다.';
       loginError.classList.remove('hidden');
       return;
     }
-    
+
     try {
-      // const response = await fetch('/api/login/', { # 밑에 테스트
-      const response = await fetch('/login/', {
+      const response = await fetch('/api/login/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      
       const data = await response.json();
-      
-      if(data.success) {
-        // 로그인 성공
+
+      if (data.success) {
         window.location.reload();
       } else {
-        // 로그인 실패
         loginError.textContent = data.message;
         loginError.classList.remove('hidden');
       }
-    } catch(error) {
+    } catch (error) {
       loginError.textContent = '서버 오류가 발생했습니다.';
       loginError.classList.remove('hidden');
     }
   });
 
-
-
   // 로그아웃 처리
   const logoutBtn = document.getElementById('logoutBtn');
   logoutBtn && logoutBtn.addEventListener('click', async () => {
     try {
-      // const response = await fetch('/api/logout/', { #밑에 테스트
-      const response = await fetch('/logout/', {
-        method: 'POST',
-      });
+      const response = await fetch('/api/logout/', { method: 'POST' });
       const data = await response.json();
-      if(data.success) {
-        window.location.reload();
-      }
-    } catch(error) {
+      if (data.success) window.location.reload();
+    } catch (error) {
       alert('로그아웃 중 오류가 발생했습니다.');
     }
   });
 
-  // 회원가입 폼 (임시)
-  const signupForm = document.getElementById('signupForm');
-  signupForm && signupForm.addEventListener('submit', e => {
-    e.preventDefault();
-    alert('회원가입 기능: 추후 구현 예정');
+  // 회원가입 버튼 흐름: 중복확인 → 인증번호 발송
+  sendCodeBtn && sendCodeBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    emailMessage.textContent = ''; // 초기화
+
+    if (!email) {
+      emailMessage.textContent = '이메일을 입력해주세요.';
+										 
+      return;
+    }
+
+    if (!emailVerified) {
+      try {
+        const response = await fetch('/api/check-email/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          emailMessage.textContent = '사용 가능한 이메일입니다.';
+          emailVerified = true;
+          sendCodeBtn.textContent = '인증번호 발송';
+        } else {
+          emailMessage.textContent = data.message || '이미 등록된 이메일입니다.';
+        }
+      } catch (error) {
+        alert('중복확인 중 오류가 발생했습니다.');
+      }
+    } else {
+      try {
+        const response = await fetch('/api/send-code/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          alert('인증번호가 이메일로 전송되었습니다.');
+          codeInput.disabled = false;
+        } else {
+          alert(data.message || '인증번호 발송 실패');
+        }
+      } catch (error) {
+        alert('인증번호 발송 중 오류가 발생했습니다.');
+      }
+    }
   });
 
-  // 음성 입력 버튼
-  micBtn && micBtn.addEventListener('click', () => {
-    alert('음성 입력 기능: 추후 구현 예정');
-  });
+  const verifyBtn = document.getElementById('verifyCodeBtn'); // 버튼 추가 필요
+  verifyBtn && verifyBtn.addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  const code = codeInput.value.trim();
 
+  try {
+    const response = await fetch('/api/verify-code/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code })
+    });
+    const data = await response.json();
 
-
+    if (data.message) {
+      alert(data.message);
+      verifyBtn.disabled = true;
+    } else {
+      alert(data.error || '인증 실패');
+    }
+  } catch (error) {
+    alert('인증 요청 중 오류 발생');
+  }
+});
 
   // 전송 버튼 (llm이랑 FAST API로 통신)
  sendBtn && sendBtn.addEventListener('click', async () => {
@@ -228,3 +289,8 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 });
+
+  // 음성 입력 버튼
+  micBtn && micBtn.addEventListener('click', () => {
+    alert('음성 입력 기능: 추후 구현 예정');
+  });

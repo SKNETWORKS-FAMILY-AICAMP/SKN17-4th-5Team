@@ -10,8 +10,7 @@
 
     <div class="chat-list">
       <div class="chat-title">채팅</div>
-      {# 일단 이렇게 mock data로 테스트 #}
-      <ul> 
+      <ul>
         <li class="chat-item">방금 고라니를 쳤...</li>
         <li class="chat-item">비가 너무 많이 오...</li>
       </ul>
@@ -23,8 +22,8 @@
   <main class="main-area">
     <header class="topbar">
       <div class="drive-mode">
-        <label>드라이브 모드</label>
-        <div class="toggle on" id="driveToggle"></div>
+        <label>리서치 모드</label>
+        <div class="toggle" id="driveToggle"></div>
       </div>
 
       <div class="user-actions">
@@ -47,7 +46,7 @@
     {% if is_authenticated %}
     <section class="chat-area">
       <div class="messages">
-        <!--<div class="message bot">채팅을 시작해주세요.</div> -->
+        <div class="message bot">채팅을 시작해주세요.</div>
       </div>
 
       <div class="chat-input-wrapper">
@@ -70,35 +69,47 @@
   <div class="modal-inner">
     <button class="modal-close" data-close="loginModal">X</button>
     <h2>로그인</h2>
-    <div id="loginError" class="error-message hidden"></div>
+    
     <form id="loginForm">
       <label>이메일</label>
       <input type="email" name="email" placeholder="you@example.com" required>
       <label>비밀번호</label>
       <input type="password" name="password" placeholder="비밀번호를 입력하세요" required>
+      <div id="loginError" class="error-message hidden" style="color: red; text-align: center; margin: 10px 0;"></div>
+
       <button type="submit" class="primary">로그인</button>
       <a href="#" id="forgotPassword">비밀번호 찾기</a>
     </form>
   </div>
 </div>
 
-
 <!-- 회원가입 모달 -->
 <div id="signupModal" class="modal hidden">
   <div class="modal-inner">
     <button class="modal-close" data-close="signupModal">X</button>
     <h2>회원가입</h2>
-    <form id="signupForm">
-      <label>이메일</label><input type="email" name="email">
-      <button type="button" id="sendCode">중복확인 / 인증번호 발송</button>
-      <label>인증번호</label><input name="code">
-      <label>비밀번호</label><input type="password" name="pwd">
-      <label>비밀번호 확인</label><input type="password" name="pwd2">
+    <form id="signupForm" method="post">
+      <label>이메일</label>
+      <input type="email" name="email" id="email">
+      <div id="emailMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
+      <button type="button" id="sendCode">중복확인</button>
+
+      <label>인증번호</label>
+      <div style="display: flex; gap: 10px;">
+        <input name="code" id="codeInput">
+        <button type="button" id="verifyCodeBtn">확인</button>
+      </div>
+
+      <label>비밀번호</label>
+      <input type="password" name="pwd">
+
+      <label>비밀번호 확인</label>
+      <input type="password" name="pwd2">
+
       <button type="submit" class="primary">회원가입</button>
     </form>
   </div>
 </div>
-
 
 <!-- 프로필 모달 -->
 <div id="profileModal" class="modal hidden">
