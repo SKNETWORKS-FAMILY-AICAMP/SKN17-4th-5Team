@@ -1,0 +1,17 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Driving Assistance</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div id="app">
+    {% block content %}{% endblock %}
+  </div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

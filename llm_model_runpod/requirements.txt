@@ -1,0 +1,27 @@
+# === Core Deep Learning ===
+torch>=2.2.0
+torchvision>=0.17.0
+transformers>=4.40.0
+peft>=0.10.0
+accelerate>=0.28.0
+
+# === Vector Database & RAG ===
+chromadb>=0.5.3
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-community>=0.2.0
+langchain-huggingface>=0.0.3
+langchain-chroma>=0.0.3
+sentence-transformers>=2.5.1
+
+# === Web Framework ===
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+
+# === Environment & Utility ===
+huggingface_hub>=0.23.0
+python-dotenv>=1.0.1
+
+# === Optional ===
+pydantic>=2.6.0
+

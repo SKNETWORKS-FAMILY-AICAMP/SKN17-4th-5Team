@@ -1,0 +1,116 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper">
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <button class="hamburger" id="hamburger">☰</button>
+    <div class="brand">AI Driving Assistance</div>
+
+    <div class="chat-list">
+      <div class="chat-title">채팅</div>
+      {# 일단 이렇게 mock data로 테스트 #}
+      <ul> 
+        <li class="chat-item">방금 고라니를 쳤...</li>
+        <li class="chat-item">비가 너무 많이 오...</li>
+      </ul>
+      <button class="new-chat">새 채팅</button>
+    </div>
+  </aside>
+
+  <!-- 메인 페이지 -->
+  <main class="main-area">
+    <header class="topbar">
+      <div class="drive-mode">
+        <label>드라이브 모드</label>
+        <div class="toggle on" id="driveToggle"></div>
+      </div>
+
+      <div class="user-actions">
+        {% if is_authenticated %}
+          <div class="profile-circle" id="profileBtn">{{ user_email|slice:":2"|upper }}</div>
+        {% else %}
+          <button class="btn login" id="loginBtn">로그인</button>
+          <button class="btn signup" id="signupBtn">회원가입</button>
+        {% endif %}
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>운전에 관한 모든 걸 물어보세요</h1>
+      {% if not is_authenticated %}
+        <p class="hint">채팅을 하려면 로그인을 해주세요.</p>
+      {% endif %}
+    </section>
+
+    {% if is_authenticated %}
+    <section class="chat-area">
+      <div class="messages">
+        <!--<div class="message bot">채팅을 시작해주세요.</div> -->
+      </div>
+
+      <div class="chat-input-wrapper">
+        <div class="chat-input">
+          <input type="text" placeholder="메시지를 입력하세요..." id="chatInput" />
+          <button id="micBtn" class="mic" style="display: none;">🎤</button>
+          <button id="sendBtn" class="send-btn">전송</button>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+</div>
+
+<!-- 모달 백드롭 -->
+<div id="modalBackdrop" class="modal-backdrop hidden"></div>
+
+<!-- 로그인 모달 -->
+<div id="loginModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="loginModal">X</button>
+    <h2>로그인</h2>
+    <div id="loginError" class="error-message hidden"></div>
+    <form id="loginForm">
+      <label>이메일</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+      <label>비밀번호</label>
+      <input type="password" name="password" placeholder="비밀번호를 입력하세요" required>
+      <button type="submit" class="primary">로그인</button>
+      <a href="#" id="forgotPassword">비밀번호 찾기</a>
+    </form>
+  </div>
+</div>
+
+
+<!-- 회원가입 모달 -->
+<div id="signupModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="signupModal">X</button>
+    <h2>회원가입</h2>
+    <form id="signupForm">
+      <label>이메일</label><input type="email" name="email">
+      <button type="button" id="sendCode">중복확인 / 인증번호 발송</button>
+      <label>인증번호</label><input name="code">
+      <label>비밀번호</label><input type="password" name="pwd">
+      <label>비밀번호 확인</label><input type="password" name="pwd2">
+      <button type="submit" class="primary">회원가입</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- 프로필 모달 -->
+<div id="profileModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="profileModal">X</button>
+    <h2>마이페이지</h2>
+    <p>Email: {{ user_email }}</p>
+    <div class="profile-actions">
+      <button id="logoutBtn">로그아웃</button>
+      <button id="changePwdBtn">비밀번호 변경</button>
+      <button id="withdrawBtn">회원 탈퇴</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

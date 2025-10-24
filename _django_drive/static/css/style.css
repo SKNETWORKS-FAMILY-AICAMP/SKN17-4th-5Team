@@ -1,0 +1,478 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* style.css - 수정된 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f5f5;
+}
+
+.wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 260px;
+  background: #2c2c2c;
+  color: white;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  margin-left: -260px;
+}
+
+.hamburger {
+  position: absolute;
+  top: 20px;
+  right: -50px;
+  background: #4a4a4a;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.hamburger:hover {
+  background: #5a5a5a;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.chat-list {
+  margin-top: 20px;
+}
+
+.chat-title {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.chat-list ul {
+  list-style: none;
+}
+
+.chat-item {
+  padding: 10px;
+  margin-bottom: 5px;
+  background: #3a3a3a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-item:hover {
+  background: #4a4a4a;
+}
+
+.new-chat {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background: #4a7bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.new-chat:hover {
+  background: #3a6bef;
+}
+
+/* ========== 메인 영역 ========== */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ========== 상단바 ========== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  padding-left: 100px; /* 토글을 오른쪽으로 이동 */
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.drive-mode {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.drive-mode label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 토글 스위치 */
+.toggle {
+  width: 50px;
+  height: 26px;
+  background: #ff4444; /* 리서치 모드 - 빨강 */
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle.on {
+  background: #4a7bff; /* 드라이브 모드 - 파랑 */
+}
+
+.toggle.on::after {
+  transform: translateX(24px);
+}
+
+/* ========== 사용자 버튼 ========== */
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: #f5f5f5;
+}
+
+.btn.login {
+  color: #4a7bff;
+  border-color: #4a7bff;
+}
+
+.btn.signup {
+  background: #4a7bff;
+  color: white;
+  border-color: #4a7bff;
+}
+
+.btn.signup:hover {
+  background: #3a6bef;
+}
+
+.btn.profile {
+  background: #4a7bff;
+  color: white;
+  border-color: #4a7bff;
+}
+
+/* 프로필 원형 아이콘 */
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4a7bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.profile-circle:hover {
+  background: #3a6bef;
+}
+
+/* 히어로 섹션 - 확인필요*/
+.hero {
+  text-align: center;
+  padding: 60px 20px 30px;
+}
+
+.hero h1 {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.hint {
+  color: #888;
+  font-size: 14px;
+}
+
+/* 채팅 영역 */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 30px;
+  overflow: hidden;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.message {
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+.message.user {
+  align-self: flex-end;
+  background: #eeeeee;          
+  padding: 8px 20px;            /* 안쪽 여백 */
+  margin: 6px 0;                 /* 위아래 여백 */
+  border-radius: 30px;           /* 둥근 모서리 */
+  max-width: 70%;                /* 너무 긴 문장은 줄바꿈 */
+  width: fit-content;            /* 글자 길이에 맞게 자동 폭 조정 */
+  word-wrap: break-word;         /* 긴 단어 줄바꿈 */
+  margin-left: auto;             /* 오른쪽 정렬 */
+  text-align: left;              /* 내부 글자는 자연스럽게 왼쪽 정렬 */
+}
+
+.message.bot {
+  /*background: #f5f5f5;*/
+  margin-right: auto;
+}
+
+
+/* 채팅 입력 */
+
+.chat-input-wrapper {
+  display: flex;
+  justify-content: center;  /* 가운데 정렬 */
+  padding: 10px 10px;
+}
+
+
+.chat-input {
+  width: 75%;               /* 입력창 폭 (50~70% 정도로 조정 가능) */
+  max-width: 800px;         /* 너무 넓어지지 않도록 제한 */
+  background: white;
+  border: 1px solid #e6e6e6;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* 살짝 그림자 */
+}
+
+.chat-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px;
+}
+
+.mic {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  /*padding: 8px;*/
+}
+
+.mic:hover {
+  opacity: 0.7;
+}
+
+/* 모달 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  z-index: 1001;
+  min-width: 400px;
+  max-width: 500px;
+}
+
+.modal-inner {
+  padding: 30px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.modal input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: #4a7bff;
+}
+
+.modal button[type="submit"],
+.modal button[type="button"],
+.modal button.primary {
+  padding: 12px;
+  background: #4a7bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal button[type="submit"]:hover,
+.modal button[type="button"]:hover,
+.modal button.primary:hover {
+  background: #3a6bef;
+}
+
+.modal a {
+  color: #4a7bff;
+  text-decoration: none;
+  font-size: 13px;
+  text-align: center;
+}
+
+.modal a:hover {
+  text-decoration: underline;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 프로필 모달 - 수정 확인*/
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.profile-actions button {
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-actions button:hover {
+  background: #f5f5f5;
+}
+
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 999;
+    height: 100%;
+    left: 0;
+  }
+  
+  .sidebar.collapsed {
+    margin-left: -260px;
+  }
+  
+  .hero h1 {
+    font-size: 24px;
+  }
+}
