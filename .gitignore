@@ -8,10 +8,11 @@ __pycache__/
 
 # 키 파일 무시
 **/*.env
+*.env
+**/*.pem
 *.pem
 
 # VS Code 설정 무시
 .vscode/
 
-# 그 외
-**/.sqlite3
+**/*.sqlite3
