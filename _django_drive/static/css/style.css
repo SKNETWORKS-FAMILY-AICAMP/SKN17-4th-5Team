@@ -244,7 +244,10 @@ body {
   font-size: 14px;
 }
 
-/* 채팅 영역 */
+/* ========== 채팅 입력 ========== */
+.chat-input-wrapper {
+  padding: 0;
+}
 .chat-area {
   flex: 1;
   display: flex;
@@ -307,6 +310,22 @@ body {
 
 .mic:hover {
   opacity: 0.7;
+}
+
+
+.send-btn {
+  background: #4a7bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.send-btn:hover {
+  background: #3a6bef;
 }
 
 /* 모달 */
@@ -415,7 +434,34 @@ body {
   display: none !important;
 }
 
-/* 프로필 모달 - 수정 확인*/
+/* ========== 프로필 모달 ========== */
+.profile-info {
+  margin: 30px 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #333;
+}
+
 .profile-actions {
   display: flex;
   flex-direction: column;
@@ -423,20 +469,47 @@ body {
   margin-top: 20px;
 }
 
-.profile-actions button {
-  padding: 10px;
-  border: 1px solid #ddd;
-  background: white;
+.profile-btn {
+  padding: 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-.profile-actions button:hover {
+.profile-btn.outline {
+  background: white;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.profile-btn.outline:hover {
   background: #f5f5f5;
 }
 
+.profile-btn.filled {
+  background: #333;
+  border: 1px solid #333;
+  color: white;
+}
 
+.profile-btn.filled:hover {
+  background: #444;
+}
+
+.profile-btn.link {
+  background: none;
+  border: none;
+  color: #999;
+  text-decoration: underline;
+}
+
+.profile-btn.link:hover {
+  color: #666;
+}
+
+/* ========== 반응형 ========== */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -456,4 +529,18 @@ body {
   .modal {
     min-width: 90%;
   }
+}
+
+/* 탈퇴 모달 추가 스타일 */
+.modal button[type="button"] {
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal button[type="button"]:hover {
+  opacity: 0.9;
 }

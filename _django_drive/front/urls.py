@@ -1,4 +1,3 @@
-
 from django.urls import path
 from . import views
 
@@ -14,4 +13,10 @@ urlpatterns = [
     path("api/send-code/", views.send_code, name="send_code"),
     path("api/verify-code/", views.verify_code, name="verify_code"),
     path("api/check-email/", views.check_email, name="check_email"),
+    path("api/set_password/", views.set_password, name="set_password"),
+
+    # 비번 검증, 변경, 회원 탈퇴
+    path('api/verify-password/', views.verify_password, name='verify_password'),
+    path('api/change-password/', views.change_password, name='change_password'),
+    path('api/withdraw/', views.withdraw, name='withdraw'),
 ]

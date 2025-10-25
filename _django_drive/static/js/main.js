@@ -1,8 +1,13 @@
 // main.js - 완성된 UI 제어
 document.addEventListener('DOMContentLoaded', function(){
+  console.log('JavaScript loaded'); 
   const loginBtn = document.getElementById('loginBtn');
   const signupBtn = document.getElementById('signupBtn');
   const profileBtn = document.getElementById('profileBtn');
+  const changePwdBtn = document.getElementById('changePwdBtn');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+  const changePwdModal = document.getElementById('changePwdModal');
+
   const modalBackdrop = document.getElementById('modalBackdrop');
   const loginModal = document.getElementById('loginModal');
   const signupModal = document.getElementById('signupModal');
@@ -23,6 +28,16 @@ document.addEventListener('DOMContentLoaded', function(){
   const codeInput = document.querySelector('input[name="code"]');
   let emailVerified = false;
 
+  // 탈퇴 관련 변수
+  const withdrawModal = document.getElementById('withdrawModal');
+  const withdrawConfirmModal = document.getElementById('withdrawConfirmModal');
+  const withdrawSuccessModal = document.getElementById('withdrawSuccessModal');
+  const withdrawForm = document.getElementById('withdrawForm');
+  const withdrawPassword = document.getElementById('withdrawPassword');
+  const withdrawError = document.getElementById('withdrawError');
+
+  console.log('changePwdBtn:', changePwdBtn); 
+  console.log('withdrawBtn:', withdrawBtn);
   // 햄버거
   if(hamburger && sidebar) {
     hamburger.addEventListener('click', () => {
@@ -80,6 +95,14 @@ document.addEventListener('DOMContentLoaded', function(){
     openModal(resetPwdModal);
   });
 
+  // 비밀번호 변경 버튼
+  if(changePwdBtn) {
+    changePwdBtn.addEventListener('click', () => {
+      closeModal(profileModal);
+      openModal(changePwdModal);
+    });
+  }
+  
   // 모달 닫기 버튼
   document.querySelectorAll('.modal-close').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -199,6 +222,51 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 
+  // 회원가입 처리
+  const signupForm = document.getElementById('signupForm');
+  signupForm && signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.querySelector('input[name="pwd"]').value.trim();
+  const confirmPassword = document.querySelector('input[name="pwd2"]').value.trim();
+
+  const pwRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+  if (!pwRegex.test(password)) {
+    alert("비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("비밀번호가 일치하지 않습니다.");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/set_password/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, confirm_password: confirmPassword })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      alert(result.message);
+
+      // ✅ 모달 닫기
+      closeModal(signupModal);
+
+      // ✅ 홈 화면으로 이동
+      openModal(loginModal);
+    } else {
+      alert(result.message);
+    }
+  } catch (error) {
+    alert("서버 오류가 발생했습니다.");
+    console.error(error);
+  }
+});
+  // 비밀번호 검증
   const verifyBtn = document.getElementById('verifyCodeBtn'); // 버튼 추가 필요
   verifyBtn && verifyBtn.addEventListener('click', async () => {
   const email = emailInput.value.trim();
@@ -222,6 +290,191 @@ document.addEventListener('DOMContentLoaded', function(){
     alert('인증 요청 중 오류 발생');
   }
 });
+
+  // 비밀번호 변경 로직
+  const oldPasswordInput = document.getElementById('oldPassword');
+  const newPasswordInput = document.getElementById('newPassword');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const oldPwdError = document.getElementById('oldPwdError');
+  const oldPwdSuccess = document.getElementById('oldPwdSuccess');
+  const newPwdError = document.getElementById('newPwdError');
+  const confirmPwdError = document.getElementById('confirmPwdError');
+  const confirmPwdSuccess = document.getElementById('confirmPwdSuccess');
+  const submitPwdChange = document.getElementById('submitPwdChange');
+  
+  let oldPasswordVerified = false;
+  let newPasswordValid = false;
+  let passwordsMatch = false;
+
+  // 비밀번호 형식 검증 (영문, 숫자 포함 6자 이상)
+  function validatePassword(password) {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    return regex.test(password);
+  }
+
+  // 기존 비밀번호 확인
+  if(oldPasswordInput) {
+    oldPasswordInput.addEventListener('input', async () => {
+      const oldPwd = oldPasswordInput.value;
+      
+      if(oldPwd.length < 6) {
+        oldPwdError.classList.add('hidden');
+        oldPwdSuccess.classList.add('hidden');
+        oldPasswordVerified = false;
+        newPasswordInput.disabled = true;
+        confirmPasswordInput.disabled = true;
+        return;
+      }
+
+      try {
+        // 기존 비밀번호 검증 API 호출
+        const response = await fetch('/api/verify-password/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: oldPwd })
+        });
+        
+        const data = await response.json();
+        
+        if(data.success) {
+          oldPwdError.classList.add('hidden');
+          oldPwdSuccess.classList.remove('hidden');
+          oldPwdSuccess.textContent = '인증 완료';
+          oldPasswordVerified = true;
+          newPasswordInput.disabled = false;
+        } else {
+          oldPwdError.classList.remove('hidden');
+          oldPwdError.textContent = '기존 비밀번호와 일치하지 않습니다.';
+          oldPwdSuccess.classList.add('hidden');
+          oldPasswordVerified = false;
+          newPasswordInput.disabled = true;
+          confirmPasswordInput.disabled = true;
+        }
+      } catch(error) {
+        oldPwdError.classList.remove('hidden');
+        oldPwdError.textContent = '오류가 발생했습니다.';
+        oldPasswordVerified = false;
+      }
+      
+      updateSubmitButton();
+    });
+  }
+
+  // 새 비밀번호 검증
+  if(newPasswordInput) {
+    newPasswordInput.addEventListener('input', () => {
+      const newPwd = newPasswordInput.value;
+      
+      if(newPwd.length === 0) {
+        newPwdError.classList.add('hidden');
+        newPasswordValid = false;
+        confirmPasswordInput.disabled = true;
+        updateSubmitButton();
+        return;
+      }
+      
+      if(!validatePassword(newPwd)) {
+        newPwdError.classList.remove('hidden');
+        newPwdError.textContent = '숫자, 영문자 포함 6자 이상이어야 합니다.';
+        newPasswordValid = false;
+        confirmPasswordInput.disabled = true;
+      } else {
+        newPwdError.classList.add('hidden');
+        newPasswordValid = true;
+        confirmPasswordInput.disabled = false;
+      }
+      
+      // 새 비밀번호가 변경되면 확인 비밀번호 재검증
+      if(confirmPasswordInput.value) {
+        confirmPasswordInput.dispatchEvent(new Event('input'));
+      }
+      
+      updateSubmitButton();
+    });
+  }
+
+  // 새 비밀번호 재확인
+  if(confirmPasswordInput) {
+    confirmPasswordInput.addEventListener('input', () => {
+      const confirmPwd = confirmPasswordInput.value;
+      const newPwd = newPasswordInput.value;
+      
+      if(confirmPwd.length === 0) {
+        confirmPwdError.classList.add('hidden');
+        confirmPwdSuccess.classList.add('hidden');
+        passwordsMatch = false;
+        updateSubmitButton();
+        return;
+      }
+      
+      if(confirmPwd !== newPwd) {
+        confirmPwdError.classList.remove('hidden');
+        confirmPwdError.textContent = '새 비밀번호와 일치하지 않습니다.';
+        confirmPwdSuccess.classList.add('hidden');
+        passwordsMatch = false;
+      } else {
+        confirmPwdError.classList.add('hidden');
+        confirmPwdSuccess.classList.remove('hidden');
+        confirmPwdSuccess.textContent = '인증 완료';
+        passwordsMatch = true;
+      }
+      
+      updateSubmitButton();
+    });
+  }
+
+  // 변경하기 버튼 활성화/비활성화
+  function updateSubmitButton() {
+    if(submitPwdChange) {
+      if(oldPasswordVerified && newPasswordValid && passwordsMatch) {
+        submitPwdChange.disabled = false;
+      } else {
+        submitPwdChange.disabled = true;
+      }
+    }
+  }
+
+  // 비밀번호 변경 폼 제출
+  const changePwdForm = document.getElementById('changePwdForm');
+  if(changePwdForm) {
+    changePwdForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const newPassword = newPasswordInput.value;
+      
+      try {
+        const response = await fetch('/api/change-password/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ new_password: newPassword })
+        });
+        
+        const data = await response.json();
+        
+        if(data.success) {
+          alert('비밀번호가 변경되었습니다.');
+          closeModal(changePwdModal);
+          // 폼 초기화
+          changePwdForm.reset();
+          oldPasswordVerified = false;
+          newPasswordValid = false;
+          passwordsMatch = false;
+          newPasswordInput.disabled = true;
+          confirmPasswordInput.disabled = true;
+          submitPwdChange.disabled = true;
+          oldPwdError.classList.add('hidden');
+          oldPwdSuccess.classList.add('hidden');
+          newPwdError.classList.add('hidden');
+          confirmPwdError.classList.add('hidden');
+          confirmPwdSuccess.classList.add('hidden');
+        } else {
+          alert('비밀번호 변경에 실패했습니다: ' + data.message);
+        }
+      } catch(error) {
+        alert('오류가 발생했습니다.');
+      }
+    });
+  }
 
   // 전송 버튼 (llm이랑 FAST API로 통신)
 sendBtn && sendBtn.addEventListener('click', async () => {
@@ -291,7 +544,108 @@ sendBtn && sendBtn.addEventListener('click', async () => {
 });
 
 
+  // 탈퇴 버튼 클릭 (프로필 모달에서) 
+  if(withdrawBtn) {
+    withdrawBtn.addEventListener('click', () => {
+      console.log('탈퇴 버튼 클릭됨');
+      
+      if(profileModal) {
+        profileModal.classList.add('hidden');
+      }
+      
+      if(withdrawModal) {
+        withdrawModal.classList.remove('hidden');
+        modalBackdrop.classList.remove('hidden');
+      }
+      
+      // 폼 초기화
+      if(withdrawPassword) {
+        withdrawPassword.value = '';
+      }
+      if(withdrawError) {
+        withdrawError.classList.add('hidden');
+      }
+    });
+  }
 
+  // 탈퇴 폼 제출 - 비밀번호 확인
+  if(withdrawForm) {
+    withdrawForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const password = withdrawPassword.value;
+      
+      try {
+        const response = await fetch('/api/verify-password/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: password })
+        });
+        
+        const data = await response.json();
+        
+        if(data.success) {
+          withdrawModal.classList.add('hidden');
+          withdrawConfirmModal.classList.remove('hidden');
+          modalBackdrop.classList.remove('hidden');
+        } else {
+          withdrawError.textContent = data.message || '비밀번호가 일치하지 않습니다.';
+          withdrawError.classList.remove('hidden');
+        }
+      } catch(error) {
+        withdrawError.textContent = '오류가 발생했습니다.';
+        withdrawError.classList.remove('hidden');
+      }
+    });
+  }
+
+// 탈퇴 확인 모달 닫기
+function closeWithdrawConfirm() {
+  const withdrawConfirmModal = document.getElementById('withdrawConfirmModal');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  
+  if(withdrawConfirmModal) {
+    withdrawConfirmModal.classList.add('hidden');
+  }
+  if(modalBackdrop) {
+    modalBackdrop.classList.add('hidden');
+  }
+}
+
+// 실제 탈퇴 처리
+async function confirmWithdrawAction() {
+  try {
+    const response = await fetch('/api/withdraw/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    const data = await response.json();
+    
+    if(data.success) {
+      closeWithdrawConfirm();
+      const withdrawSuccessModal = document.getElementById('withdrawSuccessModal');
+      const modalBackdrop = document.getElementById('modalBackdrop');
+      
+      if(withdrawSuccessModal) {
+        withdrawSuccessModal.classList.remove('hidden');
+        modalBackdrop.classList.remove('hidden');
+      }
+    } else {
+      alert(data.message || '탈퇴 처리 중 오류가 발생했습니다.');
+      closeWithdrawConfirm();
+    }
+  } catch(error) {
+
+    alert('오류가 발생했습니다.');
+    closeWithdrawConfirm();
+  }
+}
+
+// 홈으로 이동
+function goToHome() {
+  window.location.href = '/';
+}
 
 // 음성 입력 기능 (STT)
   let recognition;

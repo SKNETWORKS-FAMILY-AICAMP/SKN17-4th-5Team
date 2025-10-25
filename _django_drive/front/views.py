@@ -2,8 +2,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import check_password
-import os, requests, json, random
+from django.contrib.auth.hashers import check_password, make_password
+import os, requests, json, random, re
 from django.db import connection
 from dotenv import load_dotenv
 from django.core.mail import send_mail
@@ -64,7 +64,7 @@ def index(request):
     }
     return render(request, 'frontend/index.html', context)
 
-''' 
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -82,7 +82,7 @@ def login(request):
          
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT email, password FROM test_rds_user WHERE email = %s",
+                    "SELECT email, password FROM test_rds_users WHERE email = %s",
                     [email]
                 )
                 user = cursor.fetchone()
@@ -116,47 +116,45 @@ def login(request):
             })
     
     return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
-'''
-
 
 
 # 임시 테스트 로그임 (아무거나 입력하면 되게 함)
-@csrf_exempt
-def login(request):
-    print("[LOGIN] 요청 들어옴:", request.method)
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            email = data.get('email', '').strip()
-            password = data.get('password', '').strip()
+# @csrf_exempt
+# def login(request):
+#     print("[LOGIN] 요청 들어옴:", request.method)
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+#             email = data.get('email', '').strip()
+#             password = data.get('password', '').strip()
 
-            # DB 체크 생략 — 어떤 값이든 로그인 성공 처리
-            if not email:
-                email = "guest@example.com"
+#             # DB 체크 생략 — 어떤 값이든 로그인 성공 처리
+#             if not email:
+#                 email = "guest@example.com"
 
-            request.session['is_authenticated'] = True
-            request.session['user_email'] = email
+#             request.session['is_authenticated'] = True
+#             request.session['user_email'] = email
 
-            return JsonResponse({
-                'success': True,
-                'message': '임시 로그인 성공!',
-                'email': email
-            })
+#             return JsonResponse({
+#                 'success': True,
+#                 'message': '임시 로그인 성공!',
+#                 'email': email
+#             })
 
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'message': f'오류 발생: {str(e)}'
-            })
+#         except Exception as e:
+#             return JsonResponse({
+#                 'success': False,
+#                 'message': f'오류 발생: {str(e)}'
+#             })
 
-    return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
-
+#     return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
 
 @csrf_exempt
 def logout(request):
     request.session.flush()
     return JsonResponse({'success': True})
 
+# 인증 코드 전송 
 @csrf_exempt
 def send_code(request):
     if request.method != "POST":
@@ -187,6 +185,7 @@ def send_code(request):
 
     return JsonResponse({"message": "인증 코드가 이메일로 전송되었습니다."})
 
+# 인증 번호 인증 
 @csrf_exempt
 def verify_code(request):
     if request.method != "POST":
@@ -223,7 +222,7 @@ def check_email(request):
             return JsonResponse({"success": False, "message": "이메일이 필요합니다."}, status=400)
 
         with connection.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) FROM test_rds_user WHERE email = %s", [email])
+            cursor.execute("SELECT COUNT(*) FROM test_rds_users WHERE email = %s", [email])
             count = cursor.fetchone()[0]
 
         if count > 0:
@@ -233,3 +232,133 @@ def check_email(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "message": f"오류 발생: {str(e)}"}, status=500)
+    
+# 비밀번호 입력 양식 확인 및 비밀번호 일치 확인 
+def is_valid_password(password):
+    return bool(re.match(r'^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$', password))
+
+def passwords_match(password, confirm_password):
+    return password == confirm_password
+
+@csrf_exempt
+def set_password(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "POST 요청만 허용됩니다."}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+        password = data.get("password", "").strip()
+        confirm_password = data.get("confirm_password", "").strip()
+        email = data.get("email", "").strip()
+
+        if not is_valid_password(password):
+            return JsonResponse({
+                "success": False,
+                "message": "비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다."
+            })
+        
+        if not passwords_match(password, confirm_password):
+            return JsonResponse({
+                "success": False,
+                "message": "비밀번호가 일치하지 않습니다."
+            })
+        
+        hashed_pw = make_password(password)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO test_rds_users (email, password, created_at) VALUES (%s, %s, NOW())", 
+                [email, hashed_pw]
+            )
+
+        return JsonResponse({"success": True, "message": "회원가입이 완료되었습니다."})
+    
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"오류 발생: {str(e)}"}, status=500)
+    
+
+# 기존 비밀번호 검증
+@csrf_exempt
+def verify_password(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            password = data.get('password', '') 
+            user_email = request.session.get('user_email', '')
+            
+            if not user_email:
+                return JsonResponse({'success': False, 'message': '로그인이 필요합니다.'})
+     
+            with connection.cursor() as cursor:
+            
+                cursor.execute(
+                    "SELECT password FROM test_rds_users WHERE email = %s", 
+                    [user_email]
+                )
+                user = cursor.fetchone()
+            
+            if user and check_password(password, user[0]): 
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'message': '비밀번호가 일치하지 않습니다.'}) 
+                
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
+    return JsonResponse({'success': False})
+
+# 비밀번호 변경
+@csrf_exempt
+def change_password(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            new_password = data.get('new_password', '')
+            user_email = request.session.get('user_email', '')
+            
+            if not user_email:
+                return JsonResponse({'success': False, 'message': '로그인이 필요합니다.'})
+            
+            hashed_password = make_password(new_password)
+            
+            with connection.cursor() as cursor:
+   
+                cursor.execute(
+                    "UPDATE test_rds_users SET password = %s WHERE email = %s",
+                    [hashed_password, user_email] 
+                )
+            
+            return JsonResponse({'success': True, 'message': '비밀번호가 변경되었습니다.'})
+                
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
+    return JsonResponse({'success': False})
+
+# 회원 탈퇴
+@csrf_exempt
+def withdraw(request):
+    if request.method == 'POST':
+        try:
+            user_email = request.session.get('user_email', '')
+            
+            if not user_email:
+                return JsonResponse({'success': False, 'message': '로그인이 필요합니다.'})
+            
+            # DB에서 사용자 삭제
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "DELETE FROM test_rds_users WHERE email = %s",  # users → test_rds_users
+                    [user_email]
+                )
+            
+
+            request.session.flush()
+            
+            return JsonResponse({'success': True, 'message': '회원 탈퇴가 완료되었습니다.'})
+                
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    
+    return JsonResponse({'success': False})

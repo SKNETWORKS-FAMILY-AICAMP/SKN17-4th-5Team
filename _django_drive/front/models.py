@@ -17,7 +17,7 @@ class Conversation(models.Model):
     mode = models.CharField(max_length=20, choices=[('drive', 'Drive'), ('research', 'Research')])
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meata:
+    class Meta:
         db_table = 'test_rds_conversation'
 
 class Message(models.Model):

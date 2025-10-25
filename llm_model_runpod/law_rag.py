@@ -15,16 +15,16 @@ peft_model_id = "poketmon/hyperclovax_lora_3B"
 # Base model 먼저 로드
 base_model = AutoModelForCausalLM.from_pretrained(
     "naver-hyperclovax/HyperCLOVAX-SEED-Vision-Instruct-3B",
-    #device_map="auto",
+    device_map="auto",
     torch_dtype="auto",
     trust_remote_code=True,  # HyperCLOVA-X 모델은 custom code 필요
-).to("cuda")
+)
 
 # Tokenizer는 LoRA repo에서 불러오기
 tokenizer = AutoTokenizer.from_pretrained(peft_model_id)
 
 # Base model에 LoRA 어댑터 로드
-model = PeftModel.from_pretrained(base_model, peft_model_id).to("cuda")
+model = PeftModel.from_pretrained(base_model, peft_model_id)
 
 # KURE-v1 로드
 embedding_tokenizer = AutoTokenizer.from_pretrained("nlpai-lab/KURE-v1")
@@ -39,7 +39,7 @@ def get_embedding(text: str):
 
     return embeddings[0].tolist()
 
-chroma_client = chromadb.PersistentClient(path="law_db")
+chroma_client = chromadb.PersistentClient(path="./law_db")
 
 collection = chroma_client.get_or_create_collection(name="laws")
 
@@ -159,7 +159,7 @@ def generate_answer_with_retrieved_docs(question):
     context = "\n".join([f"문서: {content}" for i, content in enumerate(Content_list)])
     print(context)
     # 프롬프트 작성 (문서 내용을 포함하되 출력에는 포함되지 않게 함)
-    prompt = f"""다음 질문에 대해 관련 법령을 참고하여 100자 이내로 답변을 생성하라:\n{context}\n질문: {question}\n답변:"""
+    prompt = f"""다음 질문에 대해 관련 법령을 참고하여 100자 이내로 답변을 생성하라 법령은 제n조_n항_n~n호 로 구성되어 있다:\n{context}\n질문: {question}\n답변:"""
 
     # 토큰화
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
@@ -177,21 +177,7 @@ def generate_answer_with_retrieved_docs(question):
     # 결과 디코딩
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
     
-    # 문서 내용은 출력에 포함되지 않도록 수정
-    answer = answer.replace(context, "").strip()
-    print(answer)
-    return answer
-
-
-
-
-
-# ===== 6. main.py에서 import 가능하게 alias 추가 =====
-def get_rag_answer(question):
-    return generate_answer_with_retrieved_docs(question)
-
-
-
+    return answer.split('답변: ')[-1]
 
 if __name__ == "__main__":
     while True:
