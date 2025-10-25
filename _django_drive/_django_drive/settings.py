@@ -31,8 +31,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 ## SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# 따로 추가함 (STT용) -> EC2에 올리면 ngrok은 빠질 수 있음
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ngrok-free.app', '.ngrok-free.dev']
 
 # Application definition
 
@@ -81,6 +81,7 @@ WSGI_APPLICATION = "_django_drive.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # 임시 test비번 이메일
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -93,6 +94,16 @@ DATABASES = {
             'charset': 'utf8mb4',
         },
     },
+}
+"""
+
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+
 }
 
 # Password validation

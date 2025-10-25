@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
   // 전송 버튼 (llm이랑 FAST API로 통신)
- sendBtn && sendBtn.addEventListener('click', async () => {
+sendBtn && sendBtn.addEventListener('click', async () => {
   const message = chatInput.value.trim();
   if (!message) return;
 
@@ -290,7 +290,65 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 
-  // 음성 입력 버튼
-  micBtn && micBtn.addEventListener('click', () => {
-    alert('음성 입력 기능: 추후 구현 예정');
-  });
+
+
+
+// 음성 입력 기능 (STT)
+  let recognition;
+  let isRecording = false;
+
+  // 브라우저 지원 확인
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+
+    recognition.lang = "ko-KR";           // 한국어
+    recognition.interimResults = true;     // 중간 결과 표시 (실시간 자막 효과)
+    recognition.continuous = false;        // 한 문장 단위로 처리 (원하면 true로 변경 가능)
+
+    recognition.onstart = () => {
+      console.log("🎙️ 음성 인식 시작");
+      micBtn.style.color = "#ff6600";     // 마이크 버튼 활성화 시 색상 변경
+    };
+
+    recognition.onend = () => {
+      console.log("🛑 음성 인식 종료");
+      micBtn.style.color = "";            // 비활성화 시 색상 복귀
+      isRecording = false;
+    };
+
+    recognition.onerror = (event) => {
+      console.error("❌ STT 오류:", event.error);
+      micBtn.style.color = "";
+      isRecording = false;
+    };
+
+    recognition.onresult = (event) => {
+      let interim = "";
+      let final = "";
+
+      for (let i = 0; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) final += transcript + " ";
+        else interim += transcript;
+      }
+
+      // 🧩 인식된 텍스트를 입력창에 실시간 반영
+      chatInput.value = final + interim;
+    };
+
+    // 🎤 버튼 클릭 시 녹음 시작/정지 전환
+    micBtn.addEventListener("click", () => {
+      if (!isRecording) {
+        recognition.start();
+        isRecording = true;
+      } else {
+        recognition.stop();
+      }
+    });
+  } else {
+    console.warn("⚠️ 브라우저가 음성 인식을 지원하지 않습니다.");
+    micBtn.addEventListener("click", () => {
+      alert("현재 브라우저에서는 음성 입력을 지원하지 않습니다.");
+    });
+  }

@@ -64,6 +64,7 @@ def index(request):
     }
     return render(request, 'frontend/index.html', context)
 
+''' 
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -115,10 +116,12 @@ def login(request):
             })
     
     return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
+'''
+
 
 
 # 임시 테스트 로그임 (아무거나 입력하면 되게 함)
-'''@csrf_exempt
+@csrf_exempt
 def login(request):
     print("[LOGIN] 요청 들어옴:", request.method)
     if request.method == 'POST':
@@ -147,7 +150,8 @@ def login(request):
             })
 
     return JsonResponse({'success': False, 'message': '잘못된 요청입니다.'})
-'''
+
+
 @csrf_exempt
 def logout(request):
     request.session.flush()
