@@ -169,18 +169,21 @@ document.addEventListener('DOMContentLoaded', function(){
       alert('로그아웃 중 오류가 발생했습니다.');
     }
   });
-
+    
   // 회원가입 버튼 흐름: 중복확인 → 인증번호 발송
   sendCodeBtn && sendCodeBtn.addEventListener('click', async () => {
     const email = emailInput.value.trim();
     emailMessage.textContent = ''; // 초기화
 
     if (!email) {
-      emailMessage.textContent = '이메일을 입력해주세요.';
-										 
+      emailMessage.textContent = '이메일을 입력해주세요.';							 
       return;
     }
-
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      emailMessage.textContent = '올바른 이메일 형식이 아닙니다.';
+      return;
+    }
     if (!emailVerified) {
       try {
         const response = await fetch('/api/check-email/', {
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function(){
           emailMessage.textContent = data.message || '이미 등록된 이메일입니다.';
         }
       } catch (error) {
-        alert('중복확인 중 오류가 발생했습니다.');
+        emailMessage.textContent = '중복확인 중 오류가 발생했습니다.';
       }
     } else {
       try {
@@ -210,63 +213,18 @@ document.addEventListener('DOMContentLoaded', function(){
         const data = await response.json();
 
         if (data.success) {
-          alert('인증번호가 이메일로 전송되었습니다.');
+          emailMessage.textContent = '인증번호가 이메일로 전송되었습니다.';
           codeInput.disabled = false;
         } else {
-          alert(data.message || '인증번호 발송 실패');
+          emailMessage.textContent = (data.message || '인증번호 발송 실패');
         }
       } catch (error) {
-        alert('인증번호 발송 중 오류가 발생했습니다.');
+        emailMessage.textContent = '인증번호 발송 중 오류가 발생했습니다.';
       }
     }
   });
 
-  // 회원가입 처리
-  const signupForm = document.getElementById('signupForm');
-  signupForm && signupForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("email").value.trim();
-  const password = document.querySelector('input[name="pwd"]').value.trim();
-  const confirmPassword = document.querySelector('input[name="pwd2"]').value.trim();
-
-  const pwRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
-  if (!pwRegex.test(password)) {
-    alert("비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다.");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert("비밀번호가 일치하지 않습니다.");
-    return;
-  }
-
-  try {
-    const response = await fetch("/api/set_password/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, confirm_password: confirmPassword })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      alert(result.message);
-
-      // ✅ 모달 닫기
-      closeModal(signupModal);
-
-      // ✅ 홈 화면으로 이동
-      openModal(loginModal);
-    } else {
-        alert(result.message);
-      }
-    } catch (error) {
-      alert("서버 오류가 발생했습니다.");
-      console.error(error);
-    }
-  });
-
-  // 비밀번호 검증
+  // 인증번호 검증
   const verifyBtn = document.getElementById('verifyCodeBtn');
   verifyBtn && verifyBtn.addEventListener('click', async () => {
   const email = emailInput.value.trim();
@@ -287,6 +245,51 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     } catch (error) {
       alert('인증 요청 중 오류 발생');
+    }
+  });
+
+  // 회원가입 처리
+  const signupForm = document.getElementById('signupForm');
+  signupForm && signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.querySelector('input[name="pwd"]').value.trim();
+    const confirmPassword = document.querySelector('input[name="pwd2"]').value.trim();
+
+    const pwRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+    if (!pwRegex.test(password)) {
+      alert("비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/set_password/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, confirm_password: confirmPassword })
+      });
+
+    const result = await response.json();
+    if (result.success) {
+      alert(result.message);
+
+      // ✅ 모달 닫기
+      closeModal(signupModal);
+
+      // ✅ 홈 화면으로 이동
+      openModal(loginModal);
+    } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      alert("서버 오류가 발생했습니다.");
+      console.error(error);
     }
   });
 
