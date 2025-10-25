@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function(){
     if(micBtn) micBtn.style.display = 'block'; // 드라이브 모드: 음성 버튼 활성화
 
     driveToggle.addEventListener('click', () => {
-      
       isDriveMode = !isDriveMode;
       
       if(isDriveMode) {
@@ -259,37 +258,37 @@ document.addEventListener('DOMContentLoaded', function(){
       // ✅ 홈 화면으로 이동
       openModal(loginModal);
     } else {
-      alert(result.message);
+        alert(result.message);
+      }
+    } catch (error) {
+      alert("서버 오류가 발생했습니다.");
+      console.error(error);
     }
-  } catch (error) {
-    alert("서버 오류가 발생했습니다.");
-    console.error(error);
-  }
-});
+  });
+
   // 비밀번호 검증
-  const verifyBtn = document.getElementById('verifyCodeBtn'); // 버튼 추가 필요
+  const verifyBtn = document.getElementById('verifyCodeBtn');
   verifyBtn && verifyBtn.addEventListener('click', async () => {
   const email = emailInput.value.trim();
   const code = codeInput.value.trim();
 
-  try {
-    const response = await fetch('/api/verify-code/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, code })
-    });
-    const data = await response.json();
-
-    if (data.message) {
-      alert(data.message);
-      verifyBtn.disabled = true;
-    } else {
-      alert(data.error || '인증 실패');
+    try {
+      const response = await fetch('/api/verify-code/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code })
+      });
+      const data = await response.json();
+      if (data.message) {
+        alert(data.message);
+        verifyBtn.disabled = true;
+      } else {
+        alert(data.error || '인증 실패');
+      }
+    } catch (error) {
+      alert('인증 요청 중 오류 발생');
     }
-  } catch (error) {
-    alert('인증 요청 중 오류 발생');
-  }
-});
+  });
 
   // 비밀번호 변경 로직
   const oldPasswordInput = document.getElementById('oldPassword');
@@ -355,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function(){
         oldPwdError.textContent = '오류가 발생했습니다.';
         oldPasswordVerified = false;
       }
-      
+
       updateSubmitButton();
     });
   }
@@ -477,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   // 전송 버튼 (llm이랑 FAST API로 통신)
-sendBtn && sendBtn.addEventListener('click', async () => {
+  sendBtn && sendBtn.addEventListener('click', async () => {
   const message = chatInput.value.trim();
   if (!message) return;
 
@@ -542,68 +541,69 @@ sendBtn && sendBtn.addEventListener('click', async () => {
     });
   });
 });
+// 여까지가 둠
 
 
-  // 탈퇴 버튼 클릭 (프로필 모달에서) 
-  if(withdrawBtn) {
-    withdrawBtn.addEventListener('click', () => {
-      console.log('탈퇴 버튼 클릭됨');
+// 탈퇴 버튼 클릭 (프로필 모달에서) 
+if(withdrawBtn) {
+  withdrawBtn.addEventListener('click', () => {
+    console.log('탈퇴 버튼 클릭됨');
+    
+    if(profileModal) {
+      profileModal.classList.add('hidden');
+    }
+    
+    if(withdrawModal) {
+      withdrawModal.classList.remove('hidden');
+      modalBackdrop.classList.remove('hidden');
+    }
+    
+    // 폼 초기화
+    if(withdrawPassword) {
+      withdrawPassword.value = '';
+    }
+    if(withdrawError) {
+      withdrawError.classList.add('hidden');
+    }
+  });
+}
+
+// 탈퇴 폼 제출 - 비밀번호 확인
+if(withdrawForm) {
+  withdrawForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const password = withdrawPassword.value;
+    
+    try {
+      const response = await fetch('/api/verify-password/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: password })
+      });
       
-      if(profileModal) {
-        profileModal.classList.add('hidden');
-      }
+      const data = await response.json();
       
-      if(withdrawModal) {
-        withdrawModal.classList.remove('hidden');
+      if(data.success) {
+        withdrawModal.classList.add('hidden');
+        withdrawConfirmModal.classList.remove('hidden');
         modalBackdrop.classList.remove('hidden');
-      }
-      
-      // 폼 초기화
-      if(withdrawPassword) {
-        withdrawPassword.value = '';
-      }
-      if(withdrawError) {
-        withdrawError.classList.add('hidden');
-      }
-    });
-  }
-
-  // 탈퇴 폼 제출 - 비밀번호 확인
-  if(withdrawForm) {
-    withdrawForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const password = withdrawPassword.value;
-      
-      try {
-        const response = await fetch('/api/verify-password/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: password })
-        });
-        
-        const data = await response.json();
-        
-        if(data.success) {
-          withdrawModal.classList.add('hidden');
-          withdrawConfirmModal.classList.remove('hidden');
-          modalBackdrop.classList.remove('hidden');
-        } else {
-          withdrawError.textContent = data.message || '비밀번호가 일치하지 않습니다.';
-          withdrawError.classList.remove('hidden');
-        }
-      } catch(error) {
-        withdrawError.textContent = '오류가 발생했습니다.';
+      } else {
+        withdrawError.textContent = data.message || '비밀번호가 일치하지 않습니다.';
         withdrawError.classList.remove('hidden');
       }
-    });
-  }
+    } catch(error) {
+      withdrawError.textContent = '오류가 발생했습니다.';
+      withdrawError.classList.remove('hidden');
+    }
+  });
+}
 
 // 탈퇴 확인 모달 닫기
 function closeWithdrawConfirm() {
   const withdrawConfirmModal = document.getElementById('withdrawConfirmModal');
   const modalBackdrop = document.getElementById('modalBackdrop');
-  
+
   if(withdrawConfirmModal) {
     withdrawConfirmModal.classList.add('hidden');
   }
@@ -648,61 +648,61 @@ function goToHome() {
 }
 
 // 음성 입력 기능 (STT)
-  let recognition;
-  let isRecording = false;
+let recognition;
+let isRecording = false;
 
-  // 브라우저 지원 확인
-  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
+// 브라우저 지원 확인
+if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
 
-    recognition.lang = "ko-KR";           // 한국어
-    recognition.interimResults = true;     // 중간 결과 표시 (실시간 자막 효과)
-    recognition.continuous = false;        // 한 문장 단위로 처리 (원하면 true로 변경 가능)
+  recognition.lang = "ko-KR";           // 한국어
+  recognition.interimResults = true;     // 중간 결과 표시 (실시간 자막 효과)
+  recognition.continuous = false;        // 한 문장 단위로 처리 (원하면 true로 변경 가능)
 
-    recognition.onstart = () => {
-      console.log("🎙️ 음성 인식 시작");
-      micBtn.style.color = "#ff6600";     // 마이크 버튼 활성화 시 색상 변경
-    };
+  recognition.onstart = () => {
+    console.log("🎙️ 음성 인식 시작");
+    micBtn.style.color = "#ff6600";     // 마이크 버튼 활성화 시 색상 변경
+  };
 
-    recognition.onend = () => {
-      console.log("🛑 음성 인식 종료");
-      micBtn.style.color = "";            // 비활성화 시 색상 복귀
-      isRecording = false;
-    };
+  recognition.onend = () => {
+    console.log("🛑 음성 인식 종료");
+    micBtn.style.color = "";            // 비활성화 시 색상 복귀
+    isRecording = false;
+  };
 
-    recognition.onerror = (event) => {
-      console.error("❌ STT 오류:", event.error);
-      micBtn.style.color = "";
-      isRecording = false;
-    };
+  recognition.onerror = (event) => {
+    console.error("❌ STT 오류:", event.error);
+    micBtn.style.color = "";
+    isRecording = false;
+  };
 
-    recognition.onresult = (event) => {
-      let interim = "";
-      let final = "";
+  recognition.onresult = (event) => {
+    let interim = "";
+    let final = "";
 
-      for (let i = 0; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) final += transcript + " ";
-        else interim += transcript;
-      }
+    for (let i = 0; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) final += transcript + " ";
+      else interim += transcript;
+    }
 
-      // 🧩 인식된 텍스트를 입력창에 실시간 반영
-      chatInput.value = final + interim;
-    };
+    // 🧩 인식된 텍스트를 입력창에 실시간 반영
+    chatInput.value = final + interim;
+  };
 
-    // 🎤 버튼 클릭 시 녹음 시작/정지 전환
-    micBtn.addEventListener("click", () => {
-      if (!isRecording) {
-        recognition.start();
-        isRecording = true;
-      } else {
-        recognition.stop();
-      }
-    });
-  } else {
-    console.warn("⚠️ 브라우저가 음성 인식을 지원하지 않습니다.");
-    micBtn.addEventListener("click", () => {
-      alert("현재 브라우저에서는 음성 입력을 지원하지 않습니다.");
-    });
-  }
+  // 🎤 버튼 클릭 시 녹음 시작/정지 전환
+  micBtn.addEventListener("click", () => {
+    if (!isRecording) {
+      recognition.start();
+      isRecording = true;
+    } else {
+      recognition.stop();
+    }
+  });
+} else {
+  console.warn("⚠️ 브라우저가 음성 인식을 지원하지 않습니다.");
+  micBtn.addEventListener("click", () => {
+    alert("현재 브라우저에서는 음성 입력을 지원하지 않습니다.");
+  });
+}

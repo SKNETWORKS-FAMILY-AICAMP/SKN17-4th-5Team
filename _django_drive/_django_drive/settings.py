@@ -81,27 +81,26 @@ WSGI_APPLICATION = "_django_drive.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # 임시 test비번 이메일
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'testdb',
-        'USER': 'admin',
-        'PASSWORD': os.getenv('DATABASES_PASSWORD'), 
-        'HOST': os.getenv('DATABASES_HOST'),
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
-    },
-}
-
 # DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'testdb',
+#         'USER': 'admin',
+#         'PASSWORD': os.getenv('DATABASES_PASSWORD'), 
+#         'HOST': os.getenv('DATABASES_HOST'),
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'charset': 'utf8mb4',
+#         },
+#     },
 # }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
