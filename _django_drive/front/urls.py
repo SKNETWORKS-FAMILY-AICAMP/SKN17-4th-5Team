@@ -22,4 +22,5 @@ urlpatterns = [
 
     # 채팅방
     path("create_conversation/", views.create_conversation, name="create_conversation"),
+    path('chat/load_conversation/', views.load_conversation, name='load_conversation'),
 ]

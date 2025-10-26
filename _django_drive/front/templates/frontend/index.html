@@ -3,19 +3,55 @@
 
 {% block content %}
 <div class="wrapper">
-  <!-- 사이드바 -->
+  <!-- 사이드바 ❗️-->
   <aside class="sidebar">
     <button class="hamburger" id="hamburger">☰</button>
     <div class="brand">AI Driving Assistance</div>
 
+    <!--
     <div class="chat-list">
-      <div class="chat-title">채팅</div>
-      <ul>
-        <li class="chat-item">방금 고라니를 쳤...</li>
-        <li class="chat-item">비가 너무 많이 오...</li>
-      </ul>
+      <p class="chat-title" style="flex: 0.2">채팅</p>
+      {% if is_authenticated %}
       <button class="new-chat">새 채팅</button>
+      {% endif %}
+      <ul>
+
+        {% if is_authenticated %}
+          <li class="chat-item">새 채팅</li>
+    
+        {% else %}
+          <li class="chat-item" style="cursor: default; opacity: 0.7; background: #4a4a4a; pointer-events: none;">
+            채팅을 시작하려면 로그인하세요
+          </li>
+        {% endif %}
+      </ul>
     </div>
+    -->
+
+    <div class="chat-list">
+      <p class="chat-title" style="flex: 0.2">채팅</p>
+
+      {% if is_authenticated %}
+      <button class="new-chat">새 채팅</button>
+      <ul>
+        {% for convo in conversations %}
+          <li class="chat-item" data-id="{{ convo.conversation_id }}">
+            {{ convo.title }}
+          </li>
+        {% empty %}
+          <li class="chat-item" style="opacity: 0.7;">채팅 기록이 없습니다.</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <ul>
+          <li class="chat-item" style="cursor: default; opacity: 0.7; background: #4a4a4a; pointer-events: none;">
+            채팅을 시작하려면 로그인하세요
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+
+    
   </aside>
 
   <!-- 메인 페이지 -->
@@ -46,7 +82,8 @@
     {% if is_authenticated %}
     <section class="chat-area">
       <div class="messages">
-        <div class="message bot">채팅을 시작해주세요.</div>
+        <!--<div class="message bot">채팅을 시작해주세요.</div>-->
+        <div class="message"></div>
       </div>
 
       <div class="chat-input-wrapper">
@@ -142,8 +179,9 @@
   </div>
 </div>
 
-<!-- 회원 탈퇴 확인 모달 -->
 
+
+<!-- 회원 탈퇴 확인 모달 -->
 <div id="withdrawModal" class="modal hidden">
   <div class="modal-inner">
     <button class="modal-close" data-close="withdrawModal">✕</button>
@@ -234,5 +272,15 @@
     </form>
   </div>
 </div>
+
+
+<!-- 냅두세요 -->
+<script>
+  window.currentConversationId = "{{ current_convo_id|default:'' }}";
+  if (window.currentConversationId) {
+    localStorage.setItem('conversation_id', window.currentConversationId);
+    console.log('[INIT] conversation_id 세팅:', window.currentConversationId);
+  }
+</script>
 
 {% endblock %}

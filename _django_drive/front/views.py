@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.cache import cache
 from .models import User, Conversation, Message
+from django.views.decorators.http import require_GET
 
 load_dotenv()
 # Django 프로젝트 내 .env 파일에 설정되어 있어야 함
@@ -34,6 +35,7 @@ def create_conversation(request):
         user = User.objects.get(email=user_email)
         mode = request.POST.get("mode", "drive")
 
+        
         conversation = Conversation.objects.create(
             user=user,
             title="새 대화",
@@ -84,8 +86,12 @@ def chatbot_api(request):
             content=message
         )
 
+        # 첫 메시지 여부 판별 (지금 저장한 메시지 포함해서)
+        message_count = Message.objects.filter(conversation=conversation).count()
+        is_first_message = message_count == 1
+
         # 첫 메시지일 때만 제목 자동 설정
-        if Message.objects.filter(conversation=conversation).count() == 1:
+        if is_first_message:
             short_title = message[:10] + ("..." if len(message) > 10 else "")
             conversation.title = short_title
             conversation.save()
@@ -122,7 +128,8 @@ def chatbot_api(request):
         # 프론트로 응답 반환
         return JsonResponse({
             "success": True,
-            "answer": answer
+            "answer": answer,
+            "is_first_message": is_first_message
         })
 
     # 시간 초과 및 기타 오류 예외처리
@@ -140,10 +147,37 @@ def index(request):
 
     is_authenticated = request.session.get('is_authenticated', False)
     user_email = request.session.get('user_email', '')
+    conversations = []
+    current_convo_id = None
     
+    # 회원이 전혀 없는 경우 (User 테이블 비었을 때)
+    if not User.objects.exists():
+        print("[INFO] No users in DB yet → 기본 화면 렌더링")
+        return render(request, 'frontend/index.html', {
+            'is_authenticated': False,
+            'user_email': '',
+            'conversations': [],
+            'current_convo_id': None,
+        })
+
+    # 로그인 되어 있을 경우만 대화 로드 시도
+    if is_authenticated and user_email:
+        user = User.objects.filter(email=user_email).first()
+        if user:
+            conversations = Conversation.objects.filter(user=user).order_by('-created_at')
+            if conversations.exists():
+                current_convo_id = conversations.first().conversation_id
+        else:
+            # 세션에는 이메일이 있는데 실제 DB에 유저가 없는 경우
+            print(f"[WARN] user_email={user_email} not found → 세션 초기화")
+            request.session.flush()
+            is_authenticated = False
+
     context = {
         'is_authenticated': is_authenticated,
         'user_email': user_email,
+        'conversations': conversations,
+        'current_convo_id': current_convo_id,
     }
     return render(request, 'frontend/index.html', context)
 
@@ -457,3 +491,33 @@ def withdraw(request):
             return JsonResponse({'success': False, 'message': str(e)})
     
     return JsonResponse({'success': False})
+
+
+
+
+@require_GET
+def load_conversation(request):
+    """
+    저장된 특정 conversation_id의 모든 메시지를 반환
+    (새로고침 후 복원용)
+    """
+    convo_id = request.GET.get("conversation_id")
+    if not convo_id:
+        return JsonResponse({"success": False, "error": "conversation_id missing"}, status=400)
+
+    try:
+        conversation = Conversation.objects.get(conversation_id=convo_id)
+        messages = Message.objects.filter(conversation=conversation).order_by("created_at")
+
+        return JsonResponse({
+            "success": True,
+            "messages": [
+                {"role": msg.role, "content": msg.content}
+                for msg in messages
+            ]
+        })
+
+    except Conversation.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Conversation not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
