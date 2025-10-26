@@ -9,15 +9,45 @@ from dotenv import load_dotenv
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.cache import cache
+from .models import User, Conversation, Message
 
 load_dotenv()
 # Django 프로젝트 내 .env 파일에 설정되어 있어야 함
 RUNPOD_API_URL = os.getenv("RUNPOD_API_LAW")  # Runpod FastAPI endpoint (law/manual 모드 자동 처리)
 
 
-# def chat(request):
-#     # 메인 채팅 화면
-#     return render(request, "chat.html") # 합칠 때 이 부분이 이제 우리 본 html 파일이 될 것
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import User, Conversation
+
+@csrf_exempt
+def create_conversation(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
+
+    try:
+        user_email = request.session.get('user_email')
+        if not user_email:
+            return JsonResponse({"error": "로그인이 필요합니다."}, status=401)
+
+        user = User.objects.get(email=user_email)
+        mode = request.POST.get("mode", "drive")
+
+        conversation = Conversation.objects.create(
+            user=user,
+            title="새 대화",
+            mode=mode
+        )
+
+        return JsonResponse({
+            "success": True,
+            "conversation_id": conversation.conversation_id
+        })
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
 
 
 @csrf_exempt # CSRF 검증 비활성화 (fetch POST 요청 허용)
@@ -29,8 +59,37 @@ def chatbot_api(request):
     try:
         # 프론트엔드로부터 메시지 및 모드 추출
         data = json.loads(request.body)
+        print("[DEBUG] 받은 데이터:", data)  # 확인용
+        conversation_id = data.get("conversation_id") # 채팅방 id
         message = data.get("message", "")
         mode = data.get("mode", "manual") # 기본값은 매뉴얼 모드가 되도록
+
+
+        if not message:
+            return JsonResponse({"error": "Message required"}, status=400)
+        if not conversation_id:
+            return JsonResponse({"error": "conversation_id required"}, status=400)
+
+
+        # Conversation 존재 확인
+        try:
+            conversation = Conversation.objects.get(conversation_id=conversation_id)
+        except Conversation.DoesNotExist:
+            return JsonResponse({"error": "Conversation not found"}, status=404)
+
+        # 사용자 메시지 저장
+        user_message = Message.objects.create(
+            conversation=conversation,
+            role="user",
+            content=message
+        )
+
+        # 첫 메시지일 때만 제목 자동 설정
+        if Message.objects.filter(conversation=conversation).count() == 1:
+            short_title = message[:10] + ("..." if len(message) > 10 else "")
+            conversation.title = short_title
+            conversation.save()
+
 
         # RunPod API 호출: 모드는 FastAPI 런팟 서버(main.py)에서 자동 분기됨)
         res = requests.post(
@@ -40,18 +99,42 @@ def chatbot_api(request):
         )
 
         # 정상 응답일 경우 RunPod의 결과를 그대로 Django => JS로 반환
-        if res.status_code == 200:
-            return JsonResponse(res.json())
-        else:
-            # RunPod 서버에서 에러 응답을 반환한 경우
+        if res.status_code != 200:
             return JsonResponse({"error": f"Runpod returned {res.status_code}"}, status=res.status_code)
 
+
+        res_json = res.json()
+        answer = res_json.get("answer", "(응답 없음)")
+
+        # AI 응답 저장
+        Message.objects.create(
+            conversation=conversation,
+            role="assistant",
+            content=answer
+        )
+
+        # # 첫 질문이라면 title 자동 생성
+        # if conversation.title == "새 대화":
+        #     short_title = message[:10] + ("..." if len(message) > 10 else "")
+        #     conversation.title = short_title
+        #     conversation.save()
+
+        # 프론트로 응답 반환
+        return JsonResponse({
+            "success": True,
+            "answer": answer
+        })
 
     # 시간 초과 및 기타 오류 예외처리
     except requests.Timeout:
         return JsonResponse({"error": "Runpod timeout"}, status=504)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+
+
+
 
 def index(request):
 
@@ -72,7 +155,7 @@ def login(request):
             data = json.loads(request.body)
             email = data.get('email', '').strip()
             password = data.get('password', '').strip()
-            
+            mode = request.POST.get("mode", "drive")
         
             if '@' not in email or '.' not in email:
                 return JsonResponse({
@@ -80,6 +163,7 @@ def login(request):
                     'message': '올바른 이메일 형식이 아닙니다.'
                 })
          
+            # 사용자 조회
             with connection.cursor() as cursor:
                 cursor.execute(
                     "SELECT email, password FROM test_rds_users WHERE email = %s",
@@ -99,14 +183,24 @@ def login(request):
                     'message': '비밀번호가 일치하지 않습니다.'
                 })
             
-          
+            # 세션 등록
             request.session['is_authenticated'] = True
             request.session['user_email'] = email
             
+
+            # 로그인 시 자동으로 새 대화방 생성
+            user_obj = User.objects.get(email=email)
+            conversation = Conversation.objects.create(
+                user=user_obj,
+                title="새 대화",
+                mode=mode
+            )
+
             return JsonResponse({
                 'success': True,
                 'message': '로그인 성공',
-                'email': email
+                'email': email,
+                'conversation_id': conversation.conversation_id
             })
             
         except Exception as e:
