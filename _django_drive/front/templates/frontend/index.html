@@ -14,10 +14,13 @@
       <button class="new-chat">새 채팅</button>
       <ul>
         {% for convo in conversations %}
-          <li class="chat-item" data-id="{{ convo.conversation_id }}">
-            {{ convo.title }}
-          </li>
-        {% empty %}
+        <li class="chat-item" data-id="{{ convo.conversation_id }}">
+          <span class="chat-title-text">{{ convo.title }}</span>
+          <button class="delete-btn" title="삭제">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </li>
+      {% empty %}
           <li class="chat-item" style="opacity: 0.7;">채팅 기록이 없습니다.</li>
         {% endfor %}
       </ul>

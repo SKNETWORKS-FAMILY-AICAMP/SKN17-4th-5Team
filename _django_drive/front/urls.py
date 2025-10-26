@@ -23,6 +23,7 @@ urlpatterns = [
     # 채팅방
     path("create_conversation/", views.create_conversation, name="create_conversation"),
     path('chat/load_conversation/', views.load_conversation, name='load_conversation'),
+    path("delete_conversation/", views.delete_conversation, name="delete_conversation"),
 
     # TTS
     path("tts/", views.tts_view, name="tts"),

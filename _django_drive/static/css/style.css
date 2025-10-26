@@ -938,3 +938,36 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
 }
+
+
+
+.chat-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* 채팅 삭제용 */
+.chat-item:hover {
+  background: #c0dcf8;
+}
+
+.chat-item .delete-btn {
+  opacity: 0;
+  font-size: 13px;
+  color: #888;
+  cursor: pointer;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.chat-item:hover .delete-btn {
+  opacity: 1;
+}
+
+.chat-item .delete-btn:hover {
+  color: #e63946;
+}

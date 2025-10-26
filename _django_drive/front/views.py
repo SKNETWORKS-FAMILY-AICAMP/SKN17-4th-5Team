@@ -114,6 +114,34 @@ def create_conversation(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+
+
+# 이전 대화 내역 삭제
+@csrf_exempt
+def delete_conversation(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Invalid method"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        convo_id = data.get("conversation_id")
+        if not convo_id:
+            return JsonResponse({"success": False, "error": "Missing conversation_id"}, status=400)
+
+        deleted, _ = Conversation.objects.filter(conversation_id=convo_id).delete()
+        if deleted:
+            print(f"[DELETE] Conversation {convo_id} 삭제 완료 ✅")
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"success": False, "error": "Conversation not found"}, status=404)
+
+    except Exception as e:
+        print("[DELETE ERROR]", traceback.format_exc())
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+
 
 
 
@@ -124,6 +152,7 @@ def chatbot_api(request):
         return JsonResponse({"error": "POST only"}, status=405)
 
     try:
+        print("[DEBUG] request.body:", request.body)
         # 프론트엔드로부터 메시지 및 모드 추출
         data = json.loads(request.body)
         print("[DEBUG] 받은 데이터:", data)  # 확인용
@@ -163,6 +192,8 @@ def chatbot_api(request):
 
 
         # RunPod API 호출: 모드는 FastAPI 런팟 서버(main.py)에서 자동 분기됨)
+        print("[DEBUG] RUNPOD_API_URL:", RUNPOD_API_URL)
+
         res = requests.post(
             RUNPOD_API_URL,
             json={"text": message, "mode": mode},

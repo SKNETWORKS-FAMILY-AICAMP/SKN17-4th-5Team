@@ -1064,3 +1064,47 @@ if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
     alert("현재 브라우저에서는 음성 입력을 지원하지 않습니다.");
   });
 }
+
+
+
+// 사이드바 채팅 삭제 기능 
+document.addEventListener("click", async (e) => {
+
+  const deleteBtn = e.target.closest(".delete-btn");
+  if (!deleteBtn) return;
+
+  e.stopPropagation(); // chat-item 클릭 이벤트 방지
+  const chatItem = deleteBtn.closest(".chat-item");
+  const convoId = chatItem.dataset.id;
+
+  if (!confirm("이 대화를 삭제하시겠습니까?")) return;
+
+  try {
+    const res = await fetch("/delete_conversation/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conversation_id: convoId }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      console.log(`[DELETE] 대화 ${convoId} 삭제됨`);
+      chatItem.remove();
+
+      // 현재 보고 있던 대화면 메시지창 초기화
+      const currentId = localStorage.getItem("conversation_id");
+      if (currentId === convoId) {
+        const messagesDiv = document.querySelector(".messages");
+        if (messagesDiv) {
+          messagesDiv.innerHTML = "<div class='message bot'>삭제된 대화입니다.</div>";
+        }
+        localStorage.removeItem("conversation_id");
+      }
+    } else {
+      alert("삭제 실패: " + (data.error || "Unknown error"));
+    }
+  } catch (err) {
+    console.error("[DELETE ERROR]", err);
+    alert("서버 오류로 삭제에 실패했습니다.");
+  }
+});
