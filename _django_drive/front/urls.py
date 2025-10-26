@@ -19,4 +19,7 @@ urlpatterns = [
     path('api/verify-password/', views.verify_password, name='verify_password'),
     path('api/change-password/', views.change_password, name='change_password'),
     path('api/withdraw/', views.withdraw, name='withdraw'),
+
+    # 채팅방
+    path("create_conversation/", views.create_conversation, name="create_conversation"),
 ]

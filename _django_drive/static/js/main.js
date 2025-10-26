@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     try {
+      // 로그인 요청
       const response = await fetch('/api/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -147,7 +148,19 @@ document.addEventListener('DOMContentLoaded', function(){
       const data = await response.json();
 
       if (data.success) {
-        window.location.reload();
+      // 로그인 성공 → 기존 conversation_id 삭제
+      localStorage.removeItem('conversation_id');
+
+      // 새로 받은 conversation_id 저장
+      if (data.conversation_id) {
+        localStorage.setItem('conversation_id', data.conversation_id);
+        console.log('[DEBUG] 새 conversation_id 저장됨:', data.conversation_id);
+      }
+      
+      // 페이지 이동 (약간의 딜레이로 저장 반영 보장)
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
       } else {
         loginError.textContent = data.message;
         loginError.classList.remove('hidden');
@@ -157,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function(){
       loginError.classList.remove('hidden');
     }
   });
+
 
   // 로그아웃 처리
   const logoutBtn = document.getElementById('logoutBtn');
@@ -279,10 +293,10 @@ document.addEventListener('DOMContentLoaded', function(){
     if (result.success) {
       alert(result.message);
 
-      // ✅ 모달 닫기
+      // 모달 닫기
       closeModal(signupModal);
 
-      // ✅ 홈 화면으로 이동
+      // 홈 화면으로 이동
       openModal(loginModal);
     } else {
         alert(result.message);
@@ -480,34 +494,35 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // 전송 버튼 (llm이랑 FAST API로 통신)
   sendBtn && sendBtn.addEventListener('click', async () => {
-  const message = chatInput.value.trim();
-  if (!message) return;
+    const message = chatInput.value.trim();
+    if (!message) return;
 
-  // (1) 사용자가 입력한 메시지 화면에 추가
-  const messagesDiv = document.querySelector('.messages');
-  const userMsg = document.createElement('div');
-  userMsg.className = 'message user';
-  userMsg.textContent = message;
-  messagesDiv.appendChild(userMsg);
-  chatInput.value = '';
+    // (1) 사용자가 입력한 메시지 화면에 추가
+    const messagesDiv = document.querySelector('.messages');
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.textContent = message;
+    messagesDiv.appendChild(userMsg);
+    chatInput.value = '';
 
-  // (2) 로딩 메시지 표시
-  const loadingMsg = document.createElement('div');
-  loadingMsg.className = 'message bot';
-  loadingMsg.textContent = '답변 생성 중...';
-  messagesDiv.appendChild(loadingMsg);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    // (2) 로딩 메시지 표시
+    const loadingMsg = document.createElement('div');
+    loadingMsg.className = 'message bot';
+    loadingMsg.textContent = '답변 생성 중...';
+    messagesDiv.appendChild(loadingMsg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-  // (3) 현재 모드 가져오기 
-  const mode = isDriveMode ? 'manual' : 'law';
+    // (3) 현재 모드 가져오기 
+    const mode = isDriveMode ? 'manual' : 'law';
+    const conversation_id = localStorage.getItem('conversation_id'); // 저장된 conversation_id 가져오기
 
-  try {
-    // (4) Django → RunPod FastAPI 호출
-    const response = await fetch('/chat/api/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, mode })
-    });
+    try {
+
+      const response = await fetch('/chat/api/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversation_id, message, mode })
+      });
 
     const data = await response.json();
     loadingMsg.remove();
