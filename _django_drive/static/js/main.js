@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function(){
         e.target.closest('.modal').classList.add('hidden'); 
         modalBackdrop.classList.add('hidden'); 
       }
+      document.querySelectorAll('.reset-on-close').forEach(f => f.reset());
     });
   });
 
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function(){
   modalBackdrop && modalBackdrop.addEventListener('click', () => {
     document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
     modalBackdrop.classList.add('hidden');
+    document.querySelectorAll('.reset-on-close').forEach(f => f.reset());
   });
 
   // 로그인 처리
@@ -227,8 +229,8 @@ document.addEventListener('DOMContentLoaded', function(){
         const data = await response.json();
 
         if (data.success) {
-          emailMessage.textContent = '인증번호가 이메일로 전송되었습니다.';
-          codeInput.disabled = false;
+          emailMessage.textContent = data.message;
+          emailInput.disabled = true;
         } else {
           emailMessage.textContent = (data.message || '인증번호 발송 실패');
         }
@@ -241,8 +243,9 @@ document.addEventListener('DOMContentLoaded', function(){
   // 인증번호 검증
   const verifyBtn = document.getElementById('verifyCodeBtn');
   verifyBtn && verifyBtn.addEventListener('click', async () => {
-  const email = emailInput.value.trim();
-  const code = codeInput.value.trim();
+    const email = emailInput.value.trim();
+    const code = codeInput.value.trim();
+    verifyMessage.textContent = ''
 
     try {
       const response = await fetch('/api/verify-code/', {
@@ -252,13 +255,13 @@ document.addEventListener('DOMContentLoaded', function(){
       });
       const data = await response.json();
       if (data.message) {
-        alert(data.message);
+        verifyMessage.textContent = data.message;
         verifyBtn.disabled = true;
       } else {
-        alert(data.error || '인증 실패');
+        verifyMessage.textContent = (data.error || '인증 실패');
       }
     } catch (error) {
-      alert('인증 요청 중 오류 발생');
+      verifyMessage.textContent = ('인증 요청 중 오류 발생');
     }
   });
 
@@ -268,17 +271,30 @@ document.addEventListener('DOMContentLoaded', function(){
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
+    const code = codeInput.value.trim();
     const password = document.querySelector('input[name="pwd"]').value.trim();
     const confirmPassword = document.querySelector('input[name="pwd2"]').value.trim();
 
+    pwdMessage.textContent = "";
+    pwd2Message.textContent = "";
+
     const pwRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+
+    if (!email){
+      emailMessage.textContent = '이메일을 입력해주세요.';
+      return;
+    }
+    if (!code){
+      verifyMessage.textContent = '인증번호를 입력해주세요.';
+      return;
+    }
     if (!pwRegex.test(password)) {
-      alert("비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다.");
+      pwdMessage.textContent = ("비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다.");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+      pwd2Message.textContent = ("비밀번호가 일치하지 않습니다.");
       return;
     }
 

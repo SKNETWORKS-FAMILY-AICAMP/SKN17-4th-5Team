@@ -72,7 +72,7 @@
     <button class="modal-close" data-close="loginModal">X</button>
     <h2>로그인</h2>
     
-    <form id="loginForm">
+    <form id="loginForm" class="reset-on-close">
       <label>이메일</label>
       <input type="email" name="email" placeholder="you@example.com" required>
       <label>비밀번호</label>
@@ -91,26 +91,28 @@
   <div class="modal-inner">
     <button class="modal-close" data-close="signupModal">X</button>
     <h2>회원가입</h2>
-    <form id="signupForm">
+    <form id="signupForm" class="reset-on-close">
       <label>이메일</label>
       <div style="display: flex; gap: 10px;">
         <input type="email" placeholder='you@example.com' name="email" id="email" style="flex: 1;">
         <button type="button" id="sendCode">중복확인</button>
       </div>
       <div id="emailMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
-
+      
       <label>인증번호</label>
       <div style="display: flex; gap: 10px;">
         <input name="code" placeholder='인증번호를 입력하세요.' id="codeInput" style="flex: 0.8;">
         <button type="button" id="verifyCodeBtn" style="width: 50px;">확인</button>
       </div>
-
-
+      <div id="verifyMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
+      
       <label>비밀번호</label>
       <input type="password" placeholder='숫자, 영소문자 포함 6자' name="pwd">
-
+      <div id="pwdMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
+      
       <label>비밀번호 확인</label>
       <input type="password" placeholder = '확인' name="pwd2">
+      <div id="pwd2Message" class="error-message" style="color: red; margin: 5px 0;"></div>
 
       <button type="submit" class="primary">회원가입</button>
     </form>
@@ -146,7 +148,7 @@
   <div class="modal-inner">
     <button class="modal-close" data-close="withdrawModal">✕</button>
     <h2>회원 탈퇴</h2>
-    <form id="withdrawForm">
+    <form id="withdrawForm" class="reset-on-close">
       <label>비밀번호</label>
       <input 
         type="password" 
@@ -207,7 +209,7 @@
   <div class="modal-inner">
     <button class="modal-close" data-close="changePwdModal">X</button>
     <h2>비밀번호 변경</h2>
-    <form id="changePwdForm">
+    <form id="changePwdForm" class="reset-on-close">
       <div class="form-group">
         <label>기존 비밀번호</label>
         <input type="password" id="oldPassword" placeholder="숫자, 영문자 포함 6자" required>

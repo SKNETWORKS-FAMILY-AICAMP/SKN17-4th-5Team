@@ -264,7 +264,8 @@ def send_code(request):
         return JsonResponse({"error": "이메일이 필요합니다."}, status=400)
 
     # 인증 코드 code에 로직 넣으면 됨
-    code = str(random.randint(10000000, 99999999))
+    # code = str(random.randint(10000000, 99999999))
+    code = '0000'
     cache.set(email, {"code": code}, timeout=300)
 
     try:
@@ -277,7 +278,7 @@ def send_code(request):
     except Exception as e:
         return JsonResponse({"error": f"메일 발송 실패: {str(e)}"}, status=500)
 
-    return JsonResponse({"message": "인증 코드가 이메일로 전송되었습니다."})
+    return JsonResponse({"message": "인증번호가 이메일로 전송되었습니다.", "success": "success"})
 
 # 인증 번호 인증 
 @csrf_exempt
