@@ -1,0 +1,343 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper">
+  <!-- 사이드바 ❗️-->
+  <aside class="sidebar">
+    <button class="hamburger" id="hamburger">☰</button>
+
+    <div class="chat-list">
+      <p class="chat-title" style="flex: 0.2">채팅</p>
+
+      {% if is_authenticated %}
+      <button class="new-chat">새 채팅</button>
+      <ul>
+        {% for convo in conversations %}
+          <li class="chat-item" data-id="{{ convo.conversation_id }}">
+            {{ convo.title }}
+          </li>
+        {% empty %}
+          <li class="chat-item" style="opacity: 0.7;">채팅 기록이 없습니다.</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <ul>
+          <li class="chat-item" style="cursor: default; opacity: 0.7; background: #4a4a4a; pointer-events: none;">
+            채팅을 시작하려면 로그인하세요
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+
+    
+  </aside>
+
+  <!-- 메인 페이지 -->
+  <main class="main-area">
+    <header class="topbar">
+      {% if is_authenticated %}
+        <div class="drive-mode">
+          <label>드라이브 모드</label>
+          <div class="toggle" id="driveToggle"></div>
+        </div>
+      {% else %}
+        <div class="drive-mode">
+          <h1 style="font-size: 18px; font-weight: 600; color: #333; margin: 0;">AI Driving Assistance</h1>
+        </div>
+      {% endif %}
+
+      <div class="user-actions">
+        {% if is_authenticated %}
+          <div class="profile-circle" id="profileBtn">{{ user_email|slice:":1"|upper }}</div>
+        {% else %}
+          <button class="btn login" id="loginBtn">로그인</button>
+          <button class="btn signup" id="signupBtn">회원가입</button>
+        {% endif %}
+      </div>
+    </header>
+
+
+  <!-- 히어로 섹션 - ❗️ -->
+  {% if not is_authenticated %}
+    <section class="hero">
+      <h1>운전에 관한 모든 걸 물어보세요</h1>
+    </section>
+  {% endif %}
+  
+    <!-- 수정: 채팅 영역 -->
+    <section class="chat-area">
+      <div class="messages">
+        {% if is_authenticated %}
+          <!-- 로그인 후 - 채팅 시작 메시지 -->
+          {# <div class="message bot">채팅을 시작해주세요.</div> #}
+          <div class="message"></div>
+
+        {% endif %}
+
+      </div>
+
+         <div class="chat-input-wrapper">
+        <div class="chat-input">
+          <input 
+            type="text" 
+            id="chatInput" 
+            placeholder="{% if is_authenticated %}메시지를 입력하세요...{% else %}채팅을 하려면 로그인을 해주세요.{% endif %}"
+   
+          />
+          {% if is_authenticated %}
+          <button id="micBtn" class="mic" style="display: none;">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
+          {% endif %}
+          <button id="sendBtn" class="send-btn" {% if not is_authenticated %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>전송</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+
+<!-- 모달 백드롭 -->
+<div id="modalBackdrop" class="modal-backdrop hidden"></div>
+
+<!-- 로그인 모달 -->
+<div id="loginModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="loginModal">X</button>
+    <h2>로그인</h2>
+    
+    <form id="loginForm" class="reset-on-close">
+      <label>이메일</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+      <label>비밀번호</label>
+      <input type="password" name="password" placeholder="비밀번호를 입력하세요" required>
+      <div id="loginError" class="error-message hidden" style="color: red; text-align: center; margin: 10px 0;"></div>
+
+      <button type="submit" class="primary">로그인</button>
+      <a href="#" id="forgotPassword">비밀번호 찾기</a>
+    </form>
+  </div>
+</div>
+
+<!-- 회원가입 모달 -->
+<div id="signupModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="signupModal">X</button>
+    <h2>회원가입</h2>
+    <form id="signupForm" class="reset-on-close">
+      <!-- 이메일 -->
+      <div>
+        <label>이메일</label>
+        <div>
+          <input type="email" placeholder='zzang@google.com' name="email" id="email">
+          <button type="button" id="sendCode">중복확인</button>
+        </div>
+        <div id="emailMessage" name="emailMessage" class="error-message"></div>
+      </div>
+
+     <!-- 인증번호 -->
+     <div>
+      <label>인증번호 입력</label>
+      <div>
+        <input name="code" placeholder='인증번호를 입력하세요.' id="codeInput">
+        <button type="button" id="verifyCodeBtn" name="verifyCodeBtn">확인</button>
+      </div>
+      <div id="verifyMessage" name="verifyMessage" class="error-message"></div>
+
+    </div>
+
+    <!-- 비밀번호 -->
+    <div>
+      <label>비밀번호</label>
+      <input type="password" placeholder='숫자, 영소문자 포함 6자' name="pwd">
+      <div id="pwdMessage" class="error-message"></div>
+    </div>
+
+    <!-- 비밀번호 확인 -->
+    <div>
+      <label>비밀번호 재확인</label>
+      <input type="password" placeholder='숫자, 영소문자 포함 6자' name="pwd2">
+      <div id="pwd2Message" class="error-message"></div>
+    </div>
+
+    <button type="submit" class="primary">회원가입</button>
+  </form>
+</div>
+</div>
+
+<!-- 비밀번호 찾기 모달 -->
+<div id="resetPwdModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="resetPwdModal">X</button>
+    <h2>비밀번호 재설정</h2>
+    <form id="resetPwdForm" class="reset-on-close">
+      <label>이메일</label>
+      <div style="display: flex; gap: 10px;">
+        <input type="email" placeholder='you@example.com' name="email" id="resetPwd_email" style="flex: 1;">
+        <button type="button" id="resetPwd_sendCode">인증번호</button>
+      </div>
+      <div id="resetPwd_emailMessage" name="emailMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
+      
+      <label>인증번호</label>
+      <div style="display: flex; gap: 10px;">
+        <input name="code" placeholder='인증번호를 입력하세요.' id="resetPwd_codeInput" style="flex: 0.8;">
+        <button type="button" id="resetPwd_verifyCodeBtn" name="verifyCodeBtn" style="width: 50px;">확인</button>
+      </div>
+      <div id="resetPwd_verifyMessage" name="verifyMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
+      
+      <label>새 비밀번호 입력</label>
+      <input type="password" placeholder='숫자, 영소문자 포함 6자' name="pwd">
+      <div id="resetPwd_pwdMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
+      
+      <label>비밀번호 확인</label>
+      <input type="password" placeholder = '확인' name="pwd2">
+      <div id="resetPwd_pwd2Message" class="error-message" style="color: red; margin: 5px 0;"></div>
+
+      <button type="submit" class="primary">비밀번호 재설정</button>
+    </form>
+  </div>
+</div>
+
+<!-- 프로필 모달 (회원정보) -->
+<div id="profileModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="profileModal">X</button>
+    <h2>회원정보</h2>
+    <div class="profile-info">
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value">{{ user_email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">PWD</span>
+        <span class="info-value">••••••••</span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <button id="logoutBtn" class="profile-btn outline">로그아웃</button>
+      <button id="changePwdBtn" class="profile-btn filled">비밀번호 변경</button>
+      <button id="withdrawBtn" class="profile-btn link">회원 탈퇴</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- 회원 탈퇴 확인 모달 -->
+
+<div id="withdrawModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="withdrawModal">✕</button>
+    <h2>회원 탈퇴</h2>
+    <form id="withdrawForm" class="reset-on-close">
+      <label>비밀번호</label>
+      <input 
+        type="password" 
+        id="withdrawPassword" 
+        placeholder="숫자, 영소문자 포함 6자" 
+        required
+      />
+      <div id="withdrawError" class="error-message hidden"></div>
+      <button type="submit" class="primary">탈퇴하기</button>
+    </form>
+  </div>
+</div>
+
+<!-- 탈퇴 확인 모달 -->
+<div id="withdrawConfirmModal" class="modal hidden">
+  {# 스타일 비슷한건 클래스 줘서 묶어서 처리하는 방향으로 #}
+  <div class="modal-inner" style="text-align: center; padding: 40px 30px;">
+    <h2 style="font-size: 20px; margin-bottom: 15px;">탈퇴 하시겠습니까?</h2>
+    <p style="color: #666; font-size: 14px; margin-bottom: 5px;">탈퇴 버튼 선택 시, 계정은</p>
+    <p style="color: #666; font-size: 14px; margin-bottom: 5px;">삭제되며 복구되지 않습니다.</p>
+    <div style="display: flex; gap: 10px;">
+      <button 
+        type="button" 
+        onclick="closeWithdrawConfirm()" 
+        style="flex: 1; padding: 14px; background: #e9ecef; color: #495057; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;"
+      >
+        취소
+      </button>
+      <button 
+        type="button" 
+        onclick="confirmWithdrawAction()" 
+        style="flex: 1; padding: 14px; background: #6366f1; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;"
+      >
+        탈퇴
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 탈퇴 완료 모달 -->
+<div id="withdrawSuccessModal" class="modal hidden">
+  <div class="modal-inner" style="text-align: center; padding: 40px 30px;">
+    <div style="font-size: 48px; margin-bottom: 20px;">✓</div>
+    <h2 style="font-size: 20px; margin-bottom: 30px;">탈퇴가 완료되었습니다</h2>
+    <button 
+      type="button" 
+      onclick="goToHome()" 
+      style="width: 100%; padding: 14px; background: #6366f1; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;"
+    >
+      확인
+    </button>
+  </div>
+</div>
+
+
+<!-- 비밀번호 변경 모달 -->
+<div id="changePwdModal" class="modal hidden">
+  <div class="modal-inner">
+    <button class="modal-close" data-close="changePwdModal">X</button>
+    <h2>비밀번호 변경</h2>
+    <form id="changePwdForm" class="reset-on-close">
+      <div class="form-group">
+        <label>기존 비밀번호</label>
+        <input type="password" id="oldPassword" placeholder="숫자, 영문자 포함 6자" required>
+        <span id="oldPwdError" class="field-error hidden"></span>
+        <span id="oldPwdSuccess" class="field-success hidden">인증 완료</span>
+      </div>
+      
+      <div class="form-group">
+        <label>새 비밀번호</label>
+        <input type="password" id="newPassword" placeholder="숫자, 영문자 포함 6자" required disabled>
+        <span id="newPwdError" class="field-error hidden"></span>
+      </div>
+      
+      <div class="form-group">
+        <label>새 비밀번호 재확인</label>
+        <input type="password" id="confirmPassword" placeholder="숫자, 영문자 포함 6자" required disabled>
+        <span id="confirmPwdError" class="field-error hidden"></span>
+        <span id="confirmPwdSuccess" class="field-success hidden">인증 완료</span>
+      </div>
+      
+      <button type="submit" class="primary" id="submitPwdChange" disabled>변경하기</button>
+    </form>
+  </div>
+</div>
+
+
+<!--  
+<script>
+  window.currentConversationId = "{{ current_convo_id|default:'' }}";
+  if (window.currentConversationId) {
+    localStorage.setItem('conversation_id', window.currentConversationId);
+    console.log('[INIT] conversation_id 세팅:', window.currentConversationId);
+  }
+</script>
+-->
+
+<!-- 로그인 상태에 따라 localStorage 초기화 -->
+<script>
+  const isAuthenticated = "{{ is_authenticated|yesno:'true,false' }}" === "true";
+  
+  if (!isAuthenticated) {
+    // 비로그인 상태라면 모든 대화 관련 데이터 초기화
+    localStorage.removeItem('conversation_id');
+    localStorage.removeItem('is_readonly');
+    console.log('[INIT] 비로그인 상태 → localStorage 초기화됨');
+  }
+</script>
+
+{% endblock %}

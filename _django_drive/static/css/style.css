@@ -1,0 +1,940 @@
+/* style.css - 수정된 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f5f5;
+}
+
+.wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 260px;
+  background: #2c2c2c;
+  color: white;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  margin-left: -260px;
+}
+
+.hamburger {
+  position: absolute;
+  top: 20px;
+  right: -50px;
+  background: #4a4a4a;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.hamburger:hover {
+  background: #5a5a5a;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.chat-list {
+  margin-top: 20px;
+}
+
+.chat-title {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.chat-list ul {
+  list-style: none;
+}
+
+.chat-item {
+  padding: 10px;
+  margin-bottom: 5px;
+  background: #3a3a3a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-item:hover {
+  background: #4a4a4a;
+}
+
+.new-chat {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background: #4a7bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.new-chat:hover {
+  background: #3a6bef;
+}
+
+/* ========== 메인 영역 ========== */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ========== 상단바 ========== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  padding-left: 100px; /* 토글을 오른쪽으로 이동 */
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.drive-mode {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.drive-mode label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 토글 스위치 */
+.toggle {
+  width: 50px;
+  height: 26px;
+  background: #ff4444; /* 리서치 모드 - 빨강 */
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle.on {
+  background: #4a7bff; /* 드라이브 모드 - 파랑 */
+}
+
+.toggle.on::after {
+  transform: translateX(24px);
+}
+
+
+#signupModal .signup-btn {
+    width: 100%;
+    background-color: black;
+    color: white;
+    margin-top: 10px;
+}
+
+/* 회원가입 입력창 중 길이를 버튼과 동일하게 맞출 것 */
+#signupModal input[name="pwd"],
+#signupModal input[name="pwd2"] {
+    align-items: flex-start;
+    margin-right: 110px;
+}
+
+/* 비밀번호 변경 모달 전용 - 세로 배치 */
+#changePwdModal form {
+  width: 100%;
+  max-width: 440px;
+  align-items: flex-start;
+  gap: 25px;
+}
+
+#changePwdModal .form-group label {
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1E1E1E;
+}
+
+#changePwdModal .form-group input {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 8px;
+}
+
+.action-btn {
+  width: 100px;
+  background: #4B69EC;
+  color: #fff;
+}
+
+.action-btn:hover {
+  background: #3a52c4; 
+}
+
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: #f5f5f5;
+}
+
+.btn.login {
+  color: #4a7bff;
+  border-color: #4a7bff;
+}
+
+.btn.signup {
+  background: #4a7bff;
+  color: white;
+  border-color: #4a7bff;
+}
+
+.btn.signup:hover {
+  background: #3a6bef;
+}
+
+.btn.profile {
+  background: #4a7bff;
+  color: white;
+  border-color: #4a7bff;
+}
+
+/* 프로필 원형 아이콘 */
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4a7bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.profile-circle:hover {
+  background: #3a6bef;
+}
+
+/* 히어로 섹션 - 확인필요*/
+.hero {
+  text-align: center;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1; 
+}
+
+.hero h1 {
+  font-size: 48px; 
+  font-weight: 700;
+  color: #000;
+  margin-top: 200px; 
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.hint {
+  color: #999;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* ========== 채팅 입력 ========== */
+.chat-input-wrapper {
+  padding: 0;
+}
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 30px;
+  overflow: hidden;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.message {
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+.message.user {
+  background: #e3f2fd;
+  margin-left: auto;
+  text-align: right;
+}
+
+.message.bot {
+  background: #f5f5f5;
+  margin-right: auto;
+}
+
+/* 채팅 입력 */
+
+.chat-input-wrapper {
+  padding: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px; /* 상하 패딩 통일 */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  min-height: 60px; /* 최소 높이 고정 */
+  box-sizing: border-box;
+}
+
+.chat-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  height: 40px; 
+  line-height: 24px;
+  box-sizing: border-box;
+}
+
+.chat-input input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.mic {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  width: 40px; /* 너비 고정 */
+  height: 40px; /* 높이 고정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* 크기 고정 */
+}
+
+.mic:hover {
+  opacity: 0.7;
+}
+
+
+.send-btn {
+  background: #4a7bff;
+  color: white;
+  border: none;
+  padding: 10px 20px; /* 패딩 통일 */
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  height: 40px; /* 높이 고정 */
+  min-width: 60px; /* 최소 너비 */
+  flex-shrink: 0; /* 크기 고정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-btn:hover:not(:disabled) {
+  background: #3a6bef;
+}
+
+.send-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ========== 공통 모달 스타일 ========== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20px;
+  z-index: 1001;
+  min-width: 500px;
+  max-width: 600px;
+  border: 2px solid #000;
+}
+
+.modal-inner {
+  padding: 50px 60px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #000;
+  font-weight: 400;
+}
+
+.modal-close:hover {
+  color: #666;
+}
+
+.modal h2 {
+  margin-bottom: 50px;
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  color: #000;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.modal input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f8f9fa;
+  box-sizing: border-box;
+}
+
+.modal input::placeholder {
+  color: #adb5bd;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: #000;
+  background: white;
+}
+
+.modal button[type="submit"],
+.modal button.primary {
+  width: 100%;
+  padding: 16px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.modal button[type="submit"]:hover,
+.modal button.primary:hover {
+  background: #333;
+}
+
+.modal a {
+  color: #999;
+  text-decoration: none;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 15px;
+  display: block;
+}
+
+.modal a:hover {
+  color: #666;
+  text-decoration: underline;
+}
+
+/* 에러 메시지 */
+.error-message {
+  color: #f80000;
+  font-size: 13px;
+  margin-top: -10px;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.field-error {
+  color: #f80000;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+.field-success {
+  color: #6366f1;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ========== 회원가입 모달 전용 ========== */
+#signupModal .modal-inner {
+  padding: 50px 60px;
+}
+
+#signupModal h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+#signupModal form > div {
+  margin-bottom: 15px;
+}
+
+#signupModal form > div:last-of-type {
+  margin-bottom: 0;
+}
+
+/* ========== 비밀번호찾기 모달 전용 ========== */
+#resetPwdModal .modal-inner {
+  padding: 50px 60px;
+}
+
+#resetPwdModal h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+#resetPwdModal form > div {
+  margin-bottom: 15px;
+}
+
+#resetPwdModal form > div:last-of-type {
+  margin-bottom: 0;
+}
+
+
+
+/* 이메일 입력 영역 */
+#signupModal form > div:first-of-type {
+  display: flex;
+  flex-direction: column;
+}
+
+#signupModal form > div:first-of-type > div {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+#signupModal form > div:first-of-type input {
+  flex: 1;
+}
+
+#signupModal form > div:first-of-type button {
+  width: 100px;
+  padding: 14px 16px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+#signupModal form > div:first-of-type button:hover {
+  background: #4f46e5;
+}
+
+/* 인증번호 입력 영역 */
+#signupModal form > div:nth-of-type(2) > div {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+#signupModal form > div:nth-of-type(2) input {
+  flex: 1;
+}
+
+#signupModal form > div:nth-of-type(2) button {
+  width: 80px;
+  padding: 14px 16px;
+  background: #e0e0e0;
+  color: #666;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+#signupModal form > div:nth-of-type(2) button:hover {
+  background: #d0d0d0;
+}
+
+/* 비밀번호 입력창 */
+#signupModal input[name="pwd"],
+#signupModal input[name="pwd2"] {
+  width: 100%;
+}
+
+#signupModal .error-message {
+  margin-top: 5px;
+}
+
+/* ========== 비밀번호 재설정 모달 ========== */
+#resetPwdModal .modal-inner {
+  padding: 50px 60px;
+}
+
+#resetPwdModal h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+/* ========== 회원정보 모달 ========== */
+#profileModal .modal-inner {
+  padding: 50px 60px;
+}
+
+#profileModal h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+.profile-info {
+  margin: 30px 0 40px 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 80px;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  min-width: 80px;
+}
+
+.info-value {
+  font-size: 16px;
+  color: #666;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.profile-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.profile-btn.outline {
+  background: white;
+  border: 1.5px solid #e0e0e0;
+  color: #666;
+}
+
+.profile-btn.outline:hover {
+  background: #f5f5f5;
+}
+
+.profile-btn.filled {
+  background: #000;
+  border: none;
+  color: white;
+}
+
+.profile-btn.filled:hover {
+  background: #333;
+}
+
+.profile-btn.link {
+  background: none;
+  border: none;
+  color: #999;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.profile-btn.link:hover {
+  color: #666;
+  text-decoration: underline;
+}
+
+/* ========== 비밀번호 변경 모달 ========== */
+#changePwdModal .modal-inner {
+  padding: 50px 60px;
+}
+
+#changePwdModal h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+#changePwdModal .form-group {
+  /*margin-bottom: 25px;*/
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+#changePwdModal .form-group:last-of-type {
+  margin-bottom: 15px;
+}
+
+#changePwdModal .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+#changePwdModal .form-group input {
+  width: 100%;
+}
+
+#changePwdModal button[type="submit"] {
+  margin-top: 10px;
+}
+
+/* ========== 회원 탈퇴 모달 ========== */
+#withdrawModal .modal-inner {
+  padding: 50px 60px;
+}
+
+#withdrawModal h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+#withdrawModal form {
+  display: flex;
+  flex-direction: column;
+}
+
+#withdrawModal label {
+  margin-bottom: 8px;
+}
+
+#withdrawModal input {
+  margin-bottom: 20px;
+}
+
+#withdrawModal button[type="submit"] {
+  margin-top: 10px;
+}
+
+
+/* ========== 반응형 ========== */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 999;
+    height: 100%;
+    left: 0;
+  }
+  
+  .sidebar.collapsed {
+    margin-left: -260px;
+  }
+  
+  .hero h1 {
+    font-size: 24px;
+  }
+  
+  .modal {
+    min-width: 90%;
+  }
+}
+
+/* 탈퇴 모달 추가 스타일 */
+.modal button[type="button"] {
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal button[type="button"]:hover {
+  opacity: 0.9;
+}
+
+/* 전체 화면 박스 스타일 */
+.fullscreen-box {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  background: #FFFFFF;
+}
+
+/* 대형 텍스트 스타일 */
+.large-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 150%;
+  text-align: center;
+  color: #000000;
+}
+
+/* 그림자 박스 */
+.shadow-box {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 박스 테두리 스타일 */
+.rounded-box {
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+/* 작은 박스 예시 */
+.small-box {
+  width: 320px;
+  height: 137px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+/* 중간 박스 예시 */
+.medium-box {
+  width: 467px;
+  height: 416px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+/* 인증번호 박스 예시 */
+.code-box {
+  width: 505px;
+  height: 672px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
