@@ -672,8 +672,8 @@ body {
 #signupModal form > div:nth-of-type(2) button {
   width: 80px;
   padding: 14px 16px;
-  background: #e0e0e0;
-  color: #666;
+  background: #6366F1;
+  color: white;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -684,7 +684,7 @@ body {
 }
 
 #signupModal form > div:nth-of-type(2) button:hover {
-  background: #d0d0d0;
+  background: #4f46e5;
 }
 
 /* 비밀번호 입력창 */
@@ -882,6 +882,41 @@ body {
   .modal {
     min-width: 90%;
   }
+}
+
+/* === 히어로 텍스트 애니메이션 === */
+#heroText {
+  opacity: 0;
+  font-size: 48px;
+  font-weight: 700;
+  color: #000;
+  margin-top: 200px;
+  transition: opacity 0.6s ease-in-out;
+  white-space: pre; /* 줄바꿈 방지 */
+  text-shadow: none;
+}
+
+#heroText.visible {
+  opacity: 1;
+}
+
+
+/* === 블루 글로우 + 확대 축소 애니메이션 === */
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 0 0 5px rgba(66, 133, 244, 0.3);  /* 연한 파란 빛 */
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 
+      0 0 10px rgba(66, 133, 244, 0.5),
+      0 0 20px rgba(66, 133, 244, 0.4); /* 더 강한 푸른빛 */
+  }
+}
+
+#heroText.pulse {
+  animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
 /* 탈퇴 모달 추가 스타일 */

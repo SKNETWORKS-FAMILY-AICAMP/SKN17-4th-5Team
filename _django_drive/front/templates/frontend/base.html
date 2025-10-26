@@ -14,5 +14,32 @@
   </div>
 
   <script type="module" src="{% static 'js/main.js' %}"></script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const heroText = document.getElementById("heroText");
+    if (!heroText) return;
+
+    const text = heroText.textContent.trim();
+    heroText.textContent = "";
+    heroText.classList.add("visible");
+
+    let i = 0;
+    function typeEffect() {
+      if (i < text.length) {
+        heroText.textContent += text[i];
+        i++;
+        setTimeout(typeEffect, 80);
+      } else {
+        // ✅ 타이핑이 모두 끝난 후에 pulse 효과 시작
+        heroText.classList.add("pulse");
+      }
+    }
+
+    setTimeout(typeEffect, 400);
+  });
+</script>
+
+
 </body>
 </html>
