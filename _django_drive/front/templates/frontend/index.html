@@ -8,50 +8,23 @@
     <button class="hamburger" id="hamburger">☰</button>
     <div class="brand">AI Driving Assistance</div>
 
-    <!--
     <div class="chat-list">
-      <p class="chat-title" style="flex: 0.2">채팅</p>
-      {% if is_authenticated %}
-      <button class="new-chat">새 채팅</button>
-      {% endif %}
+      <div class="chat-title">채팅</div>
       <ul>
-
         {% if is_authenticated %}
           <li class="chat-item">새 채팅</li>
-    
+          <li class="chat-item">방금 고라니를 쳤...</li>
+          <li class="chat-item">비가 너무 많이 오...</li>
         {% else %}
           <li class="chat-item" style="cursor: default; opacity: 0.7; background: #4a4a4a; pointer-events: none;">
             채팅을 시작하려면 로그인하세요
           </li>
         {% endif %}
       </ul>
-    </div>
-    -->
-
-    <div class="chat-list">
-      <p class="chat-title" style="flex: 0.2">채팅</p>
-
       {% if is_authenticated %}
       <button class="new-chat">새 채팅</button>
-      <ul>
-        {% for convo in conversations %}
-          <li class="chat-item" data-id="{{ convo.conversation_id }}">
-            {{ convo.title }}
-          </li>
-        {% empty %}
-          <li class="chat-item" style="opacity: 0.7;">채팅 기록이 없습니다.</li>
-        {% endfor %}
-      </ul>
-      {% else %}
-        <ul>
-          <li class="chat-item" style="cursor: default; opacity: 0.7; background: #4a4a4a; pointer-events: none;">
-            채팅을 시작하려면 로그인하세요
-          </li>
-        </ul>
       {% endif %}
     </div>
-
-    
   </aside>
 
   <!-- 메인 페이지 -->
@@ -72,31 +45,37 @@
       </div>
     </header>
 
+    <!-- 히어로 섹션 - ❗️ -->
     <section class="hero">
       <h1>운전에 관한 모든 걸 물어보세요</h1>
-      {% if not is_authenticated %}
-        <p class="hint">채팅을 하려면 로그인을 해주세요.</p>
-      {% endif %}
     </section>
 
-    {% if is_authenticated %}
+    <!-- 수정: 채팅 영역 -->
     <section class="chat-area">
       <div class="messages">
-        <!--<div class="message bot">채팅을 시작해주세요.</div>-->
-        <div class="message"></div>
+        {% if is_authenticated %}
+          <!-- 로그인 후 - 채팅 시작 메시지 -->
+          <div class="message bot">채팅을 시작해주세요.</div>
+        {% endif %}
       </div>
 
       <div class="chat-input-wrapper">
         <div class="chat-input">
-          <input type="text" placeholder="메시지를 입력하세요..." id="chatInput" />
+          <input 
+            type="text" 
+            id="chatInput" 
+            placeholder="{% if is_authenticated %}메시지를 입력하세요...{% else %}채팅을 하려면 로그인을 해주세요.{% endif %}"
+            {% if not is_authenticated %}disabled style="background: #f5f5f5; cursor: not-allowed;"{% endif %}
+          />
+          {% if is_authenticated %}
           <button id="micBtn" class="mic" style="display: none;">
             <i class="fa-solid fa-microphone"></i>
           </button>
-          <button id="sendBtn" class="send-btn">전송</button>
+          {% endif %}
+          <button id="sendBtn" class="send-btn" {% if not is_authenticated %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>전송</button>
         </div>
       </div>
     </section>
-    {% endif %}
   </main>
 </div>
 
@@ -121,7 +100,6 @@
     </form>
   </div>
 </div>
-
 
 <!-- 회원가입 모달 -->
 <div id="signupModal" class="modal hidden">
@@ -178,8 +156,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- 회원 탈퇴 확인 모달 -->
 <div id="withdrawModal" class="modal hidden">
@@ -241,7 +217,6 @@
   </div>
 </div>
 
-
 <!-- 비밀번호 변경 모달 -->
 <div id="changePwdModal" class="modal hidden">
   <div class="modal-inner">
@@ -272,15 +247,5 @@
     </form>
   </div>
 </div>
-
-
-<!-- 냅두세요 -->
-<script>
-  window.currentConversationId = "{{ current_convo_id|default:'' }}";
-  if (window.currentConversationId) {
-    localStorage.setItem('conversation_id', window.currentConversationId);
-    console.log('[INIT] conversation_id 세팅:', window.currentConversationId);
-  }
-</script>
 
 {% endblock %}

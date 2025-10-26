@@ -36,38 +36,8 @@ document.addEventListener('DOMContentLoaded', function(){
   const withdrawPassword = document.getElementById('withdrawPassword');
   const withdrawError = document.getElementById('withdrawError');
 
-  // 새로고침 시 마지막 대화 복원
-  const savedConvoId = localStorage.getItem('conversation_id');
-  if (savedConvoId) {
-    console.log('[INIT] 기존 conversation_id:', savedConvoId);
-
-  fetch(`/chat/load_conversation/?conversation_id=${savedConvoId}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.success && data.messages.length > 0) {
-        const messagesDiv = document.querySelector('.messages');
-        messagesDiv.innerHTML = ''; // "채팅을 시작해주세요" 제거
-
-        data.messages.forEach(msg => {
-          const msgDiv = document.createElement('div');
-          msgDiv.className = `message ${msg.role === 'user' ? 'user' : 'bot'}`;
-          msgDiv.textContent = msg.content;
-          messagesDiv.appendChild(msgDiv);
-        });
-
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        console.log(`[INIT] ${data.messages.length}개 메시지 복원됨`);
-      } else {
-        console.log('[INIT] 복원할 메시지 없음.');
-      }
-    })
-    .catch(err => console.error('[INIT] 대화 복원 오류:', err));
-  }
-
-
   console.log('changePwdBtn:', changePwdBtn); 
   console.log('withdrawBtn:', withdrawBtn);
-
   // 햄버거
   if(hamburger && sidebar) {
     hamburger.addEventListener('click', () => {
@@ -538,7 +508,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
-  
   // 전송 버튼 (llm이랑 FAST API로 통신)
   sendBtn && sendBtn.addEventListener('click', async () => {
     const message = chatInput.value.trim();
@@ -564,50 +533,26 @@ document.addEventListener('DOMContentLoaded', function(){
     const conversation_id = localStorage.getItem('conversation_id'); // 저장된 conversation_id 가져오기
 
     try {
-      // ✅ (4) RunPod 호출을 Django API에 요청
+
       const response = await fetch('/chat/api/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ conversation_id, message, mode })
       });
 
-      const data = await response.json();
-      loadingMsg.remove(); // 로딩 메시지 제거
+    const data = await response.json();
+    loadingMsg.remove();
 
-      // ✅ (5) 첫 메시지일 경우에만 타이틀 변경
-      if (data.is_first_message) {
-        const conversationId = localStorage.getItem('conversation_id');
-        const sidebarItem = document.querySelector(`.chat-item[data-id="${conversationId}"]`);
-
-        if (sidebarItem) {
-          const newTitle = message.slice(0, 10) + (message.length > 10 ? '...' : '');
-          sidebarItem.textContent = ''; 
-          let i = 0;
-          const typingInterval = setInterval(() => {
-            sidebarItem.textContent += newTitle[i];
-            i++;
-            if (i >= newTitle.length) {
-              clearInterval(typingInterval);
-              sidebarItem.style.transition = 'color 0.3s ease';
-              sidebarItem.style.color = '#6366f1';
-              setTimeout(() => { sidebarItem.style.color = ''; }, 1000);
-            }
-          }, 80);
-        }
-      }
-
-      // ✅ (6) 응답 메시지 출력
-      const botMsg = document.createElement('div');
-      botMsg.className = 'message bot';
-      botMsg.textContent = data.answer || data.error || '응답을 불러올 수 없습니다.';
-      messagesDiv.appendChild(botMsg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    } catch (error) {
-      console.error('[ERROR] chatbot_api 호출 실패:', error);
-      loadingMsg.textContent = '서버 연결 실패';
-    }
-  });
+    // (5) 응답 표시
+    const botMsg = document.createElement('div');
+    botMsg.className = 'message bot';
+    botMsg.textContent = data.answer || data.error || '응답을 불러올 수 없습니다.';
+    messagesDiv.appendChild(botMsg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  } catch (error) {
+    loadingMsg.textContent = '서버 연결 실패';
+  }
+});
 
 
   // Enter 키로 전송
