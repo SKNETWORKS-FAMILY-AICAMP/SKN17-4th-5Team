@@ -698,13 +698,114 @@ body {
 }
 
 /* ========== 비밀번호 재설정 모달 ========== */
+#resetPwdModal.modal {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
 #resetPwdModal .modal-inner {
   padding: 50px 60px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 #resetPwdModal h2 {
   font-size: 36px;
   margin-bottom: 40px;
+  flex-shrink: 0;
+}
+
+#resetPwdModal form {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* 스크롤바 스타일링 */
+#resetPwdModal form::-webkit-scrollbar {
+  width: 6px;
+}
+
+#resetPwdModal form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+#resetPwdModal form::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+#resetPwdModal form::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+#resetPwdModal .form-field {
+  margin-bottom: 20px;
+}
+
+#resetPwdModal .form-field:last-of-type {
+  margin-bottom: 15px;
+}
+
+#resetPwdModal .form-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+#resetPwdModal .input-with-button {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+#resetPwdModal .input-with-button input {
+  flex: 1;
+}
+
+#resetPwdModal .field-button {
+  width: 100px;
+  padding: 14px 16px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+  transition: background 0.2s ease;
+}
+
+#resetPwdModal .field-button:hover {
+  background: #4f46e5;
+}
+
+#resetPwdModal .field-button.verify {
+  width: 80px;
+  background: #6366F1;
+  color: white;
+}
+
+#resetPwdModal .field-button.verify:hover {
+  background: #4f46e5;
+}
+
+#resetPwdModal .error-message {
+  margin-top: 5px;
+  min-height: 18px;
+}
+
+#resetPwdModal button[type="submit"] {
+  margin-top: 15px;
+  flex-shrink: 0;
 }
 
 /* ========== 회원정보 모달 ========== */

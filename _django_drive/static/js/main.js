@@ -43,14 +43,12 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
 
-
   const loginBtn = document.getElementById('loginBtn');
   const signupBtn = document.getElementById('signupBtn');
   const profileBtn = document.getElementById('profileBtn');
   const changePwdBtn = document.getElementById('changePwdBtn');
   const changePwdModal = document.getElementById('changePwdModal');
   const withdrawBtn = document.getElementById('withdrawBtn');
-
 
   const modalBackdrop = document.getElementById('modalBackdrop');
   const loginModal = document.getElementById('loginModal');
@@ -112,7 +110,54 @@ document.addEventListener('DOMContentLoaded', function(){
     .catch(err => console.error('[INIT] 대화 복원 오류:', err));
   }
 
+  const timers = {};
 
+  // 타이머 시작 함수
+  
+  function startTimer(timerElementId) {
+    const timerDisplay = document.getElementById(timerElementId);
+    if (!timerDisplay) return;
+
+    // 기존 타이머가 있으면 정리
+    if (timers[timerElementId]) {
+      clearInterval(timers[timerElementId]);
+    }
+
+    let timeLeft = 300; // 5분
+
+    timerDisplay.classList.remove("hidden");
+    timerDisplay.style.color = "#000";
+    timerDisplay.textContent = formatTime(timeLeft);
+
+    timers[timerElementId] = setInterval(() => {
+      timeLeft--;
+      if (timeLeft > 0) {
+        timerDisplay.textContent = formatTime(timeLeft);
+      } else {
+        clearInterval(timers[timerElementId]);
+        timerDisplay.textContent = "인증 시간이 만료되었습니다.";
+        timerDisplay.style.color = "red";
+      }
+    }, 1000);
+  }
+  // 타이머 정지 함수
+  function stopTimer(timerElementId) {
+    const timerDisplay = document.getElementById(timerElementId);
+    if (timers[timerElementId]) {
+      clearInterval(timers[timerElementId]);
+      if (timerDisplay) {
+        timerDisplay.textContent = "0:00";
+      }
+    }
+  }
+
+  // 시간 포맷 함수 (MM:SS)
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}:${sec < 10 ? "0" + sec : sec}`;
+  }
+ 
   console.log('changePwdBtn:', changePwdBtn); 
   console.log('withdrawBtn:', withdrawBtn);
 
@@ -318,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   // 인증번호 발송
-  async function sendVerificationCode(email, emailMessage) {
+  async function sendVerificationCode(email, emailMessage, timerId) {
     const email_value = email.value.trim();
     try {
       const response = await fetch('/api/send-code/', {
@@ -331,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if (data.success) {
         emailMessage.textContent = data.message;
         email.disabled = true;
+        startTimer(timerId);
       } else {
         emailMessage.textContent = data.message || '인증번호 발송 실패';
       }
@@ -342,6 +388,8 @@ document.addEventListener('DOMContentLoaded', function(){
   async function validateAndSendCode (form, sendBtn) {
     const email = form.elements['email'];
     const emailMessage = form.querySelector('[name="emailMessage"]');
+    const timerId = form.querySelector('[name="timer"]').id;
+    
     if (!email.value) {
       emailMessage.textContent = '이메일을 입력해주세요.';
       return;
@@ -354,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (!emailVerified) {
       await checkEmail(email, emailMessage, sendBtn);
     } else {
-      await sendVerificationCode(email, emailMessage);
+      await sendVerificationCode(email, emailMessage, timerId);
     }
   }
 
@@ -370,6 +418,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const email = form.elements['email'].value;
     const code = form.elements['code'].value;
     const verifyMessage = form.querySelector('[name="verifyMessage"]');
+    const timerId = form.querySelector('[name="timer"]').id;
     verifyMessage.textContent = ''
 
     try {
@@ -380,16 +429,18 @@ document.addEventListener('DOMContentLoaded', function(){
       });
       const data = await response.json();
       if (data.message) {
-        verifyMessage .textContent = data.message;
+        verifyMessage.textContent = data.message;
         verifyMessage.classList.add('field-success');
         verifyMessage.classList.remove('field-error');
         btn.disabled = true;
+        stopTimer(timerId);
       } else {
         verifyMessage.textContent = (data.error || '인증 실패');
         verifyMessage.classList.add('field-error');
         verifyMessage.classList.remove('field-success');
       }
     } catch (error) {
+      console.log(error)
       verifyMessage.textContent = ('인증 요청 중 오류 발생');
       verifyMessage.classList.add('field-error');
       verifyMessage.classList.remove('field-success');

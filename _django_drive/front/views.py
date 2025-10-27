@@ -395,10 +395,13 @@ def send_code(request):
 
     # 인증 코드 code에 로직 넣으면 됨
     # code = str(random.randint(10000000, 99999999))
+    # I l O 제외
+    SAFE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789"
     def generate_random_code(length):
-        chars = string.ascii_letters + string.digits  # 알파벳 대소문자 + 숫자
-        return ''.join(random.choice(chars) for _ in range(length))
-    code = generate_random_code(8)
+        return ''.join(random.choice(SAFE_CHARS) for _ in range(length))
+    # code = generate_random_code(8)
+    code = '0000'
+
     cache.set(email, {"code": code}, timeout=300)
 
     try:

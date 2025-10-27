@@ -140,14 +140,14 @@
       </div>
 
      <!-- 인증번호 -->
-     <div>
+    <div>
       <label>인증번호 입력</label>
       <div>
         <input name="code" placeholder='인증번호를 입력하세요.' id="codeInput">
         <button type="button" id="verifyCodeBtn" name="verifyCodeBtn">확인</button>
+        <span id="timer" class="timer-text hidden" name="timer"></span>
       </div>
       <div id="verifyMessage" name="verifyMessage" class="error-message"></div>
-
     </div>
 
     <!-- 비밀번호 -->
@@ -169,33 +169,46 @@
 </div>
 </div>
 
-<!-- 비밀번호 찾기 모달 -->
+<!-- 비밀번호 재설정 모달 -->
 <div id="resetPwdModal" class="modal hidden">
   <div class="modal-inner">
     <button class="modal-close" data-close="resetPwdModal">X</button>
     <h2>비밀번호 재설정</h2>
     <form id="resetPwdForm" class="reset-on-close">
-      <label>이메일</label>
-      <div style="display: flex; gap: 10px;">
-        <input type="email" placeholder='you@example.com' name="email" id="resetPwd_email" style="flex: 1;">
-        <button type="button" id="resetPwd_sendCode">인증번호</button>
+      <!-- 이메일 -->
+      <div class="form-field">
+        <label>이메일</label>
+        <div class="input-with-button">
+          <input type="email" placeholder="zzang@google.com" name="email" id="resetPwd_email">
+          <button type="button" id="resetPwd_sendCode" class="field-button">인증번호</button>
+        </div>
+        <div id="resetPwd_emailMessage" name="emailMessage" class="error-message"></div>
       </div>
-      <div id="resetPwd_emailMessage" name="emailMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
-      
-      <label>인증번호</label>
-      <div style="display: flex; gap: 10px;">
-        <input name="code" placeholder='인증번호를 입력하세요.' id="resetPwd_codeInput" style="flex: 0.8;">
-        <button type="button" id="resetPwd_verifyCodeBtn" name="verifyCodeBtn" style="width: 50px;">확인</button>
+
+      <!-- 인증번호 입력 -->
+      <div class="form-field">
+        <label>인증번호 입력</label>
+        <div class="input-with-button">
+          <input type="text" placeholder="AB3c6d0I" name="code" id="resetPwd_codeInput">
+          <button type="button" id="resetPwd_verifyCodeBtn" class="field-button verify">확인</button>
+          <span id="resetPwd_timer" name="timer" class="resetPwd_timer-text hidden"></span>
+        </div>
+        <div id="resetPwd_verifyMessage" name="verifyMessage" class="error-message"></div>
       </div>
-      <div id="resetPwd_verifyMessage" name="verifyMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
-      
-      <label>새 비밀번호 입력</label>
-      <input type="password" placeholder='숫자, 영소문자 포함 6자' name="pwd">
-      <div id="resetPwd_pwdMessage" class="error-message" style="color: red; margin: 5px 0;"></div>
-      
-      <label>비밀번호 확인</label>
-      <input type="password" placeholder = '확인' name="pwd2">
-      <div id="resetPwd_pwd2Message" class="error-message" style="color: red; margin: 5px 0;"></div>
+
+      <!-- 새 비밀번호 입력 -->
+      <div class="form-field">
+        <label>새 비밀번호 입력</label>
+        <input type="password" placeholder="숫자, 영소문자 포함 6자" name="pwd" id="resetPwd_newPassword">
+        <div id="resetPwd_pwdMessage" name="pwdMessage" class="error-message"></div>
+      </div>
+
+      <!-- 비밀번호 재확인 -->
+      <div class="form-field">
+        <label>비밀번호 재확인</label>
+        <input type="password" placeholder="숫자, 영소문자 포함 6자" name="pwd2" id="resetPwd_confirmPassword">
+        <div id="resetPwd_pwd2Message" name="pwd2Message" class="error-message"></div>
+      </div>
 
       <button type="submit" class="primary">비밀번호 재설정</button>
     </form>
