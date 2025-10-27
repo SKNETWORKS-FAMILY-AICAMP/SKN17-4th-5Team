@@ -399,8 +399,8 @@ def send_code(request):
     SAFE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789"
     def generate_random_code(length):
         return ''.join(random.choice(SAFE_CHARS) for _ in range(length))
-    # code = generate_random_code(8)
-    code = '0000'
+    code = generate_random_code(8)
+    # code = '0000'
 
     cache.set(email, {"code": code}, timeout=300)
 

@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function(){
       clearInterval(timers[timerElementId]);
     }
     
-    let timeLeft = 300; // 5분
+    let timeLeft = 10; // 5분
     
     timerDisplay.classList.remove("hidden");
     timerDisplay.style.color = "#000";
@@ -364,9 +364,12 @@ document.addEventListener('DOMContentLoaded', function(){
       emailMessage.classList.add('field-error');
     }
   }
-
+  
   // 인증번호 발송
+  const verify = false;
   async function sendVerificationCode(email, emailMessage, timerId) {
+    verify = false;
+    sendBtn.disabled = true;
     const email_value = email.value.trim();
     try {
       const response = await fetch('/api/send-code/', {
@@ -386,6 +389,7 @@ document.addEventListener('DOMContentLoaded', function(){
     } catch (error) {
       emailMessage.textContent = '인증번호 발송 중 오류가 발생했습니다.';
     }
+    sendBtn.disabled = false;
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -405,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (!emailVerified) {
       await checkEmail(email, emailMessage, sendBtn, timerId);
     } else {
-      await sendVerificationCode(email, emailMessage, timerId);
+      await sendVerificationCode(email, emailMessage, sendBtn, timerId);
     }
   }
 
@@ -416,7 +420,6 @@ document.addEventListener('DOMContentLoaded', function(){
   // 인증번호 검증
   const verifyBtn = document.getElementById('verifyCodeBtn');
   const resetPwd_verifyCodeBtn = document.getElementById('resetPwd_verifyCodeBtn');
-
   async function verifyCode(form, btn) {
     const email = form.elements['email'].value;
     const code = form.elements['code'].value;
@@ -437,6 +440,7 @@ document.addEventListener('DOMContentLoaded', function(){
         verifyMessage.classList.remove('field-error');
         btn.disabled = true;
         stopTimer(timerId);
+        verify = true;
       } else {
         verifyMessage.textContent = (data.error || '인증 실패');
         verifyMessage.classList.add('field-error');
@@ -467,6 +471,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const pwRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
 
+    emailMessage.textContent = '';
+    verifyMessage.textContent = '';
+    pwdMessage.textContent = '';
+
     if (!email){
       emailMessage.textContent = '이메일을 입력해주세요.';
       return;
@@ -474,6 +482,10 @@ document.addEventListener('DOMContentLoaded', function(){
     if (!code){
       verifyMessage.textContent = '인증번호를 입력해주세요.';
       return;
+    }
+    if(!verify){
+      verifyMessage.textContent = '인증번호 확인을 진행하세요.'
+      return; 
     }
     if (!pwRegex.test(password)) {
       pwdMessage.textContent = ("비밀번호는 영소문자와 숫자를 포함해 6자 이상이어야 합니다.");
