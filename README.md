@@ -21,7 +21,22 @@
 
 ### 🔸프로젝트 목표
 
-# 3. 기술 스택
+# 3. WBS
+<img width="1822" height="722" alt="image" src="https://github.com/user-attachments/assets/e0825cd3-c2a4-4e6e-a184-3e6acbafc237" />
+
+# 4. 요구사항 정의서
+
+🔸**회원정보 관련**
+<img width="1421" height="379" alt="image" src="https://github.com/user-attachments/assets/bf0ab87a-61e9-4fe4-b7e3-48c06f0f55b2" />
+
+🔸**채팅 관련**
+<img width="1415" height="587" alt="image" src="https://github.com/user-attachments/assets/efaec212-c06f-4bd9-9445-ad083fe99379" />
+
+# 5. 화면설계서
+
+# 6. 시스템 구성도
+
+# 7. 기술 스택
 
 | 분야                   | 기술 및 라이브러리 |
 |------------------------|------------------|
@@ -37,24 +52,6 @@
 | **인프라 및 배포** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Amazon AWS](https://img.shields.io/badge/Amazon%20AWS-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white) |
 | **협업 및 형상관리** | ![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) |
 
-
-# 4. 시스템 구성도
-
-# 5. 요구사항 정의서
-
-🔸**회원정보 관련**
-<img width="1421" height="379" alt="image" src="https://github.com/user-attachments/assets/bf0ab87a-61e9-4fe4-b7e3-48c06f0f55b2" />
-
-🔸**채팅 관련**
-<img width="1415" height="587" alt="image" src="https://github.com/user-attachments/assets/efaec212-c06f-4bd9-9445-ad083fe99379" />
-
-
-
-
-# 6. 화면설계서
-
-# 7. WBS
-<img width="1822" height="722" alt="image" src="https://github.com/user-attachments/assets/e0825cd3-c2a4-4e6e-a184-3e6acbafc237" />
 
 
 # 8. 테스트 계획 및 결과 보고서
