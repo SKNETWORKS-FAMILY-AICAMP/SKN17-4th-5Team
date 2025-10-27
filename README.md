@@ -92,6 +92,31 @@
 
 </details> 
 
+<details>
+<summary>로그인</summary>
+ 
+<img width="1266" height="709" alt="image" src="https://github.com/user-attachments/assets/b3cb45fa-6467-4fbe-a07a-66a4d6b5213e" />
+
+</details> 
+
+<details>
+<summary>회원정보 수정</summary>
+<img width="1273" height="710" alt="image" src="https://github.com/user-attachments/assets/c6b32103-dd9c-486f-abcf-1330dee4e8df" />
+<img width="1271" height="713" alt="image" src="https://github.com/user-attachments/assets/bdb9fc05-ca34-417d-b137-acc7e908999c" />
+
+<img width="1263" height="710" alt="image" src="https://github.com/user-attachments/assets/6f2caf48-110a-4804-ae03-4d2a4249e1c2" />
+<img width="1265" height="711" alt="image" src="https://github.com/user-attachments/assets/82a1639d-544f-4c1c-9807-0ba6582ef7c9" />
+
+</details> 
+
+<details>
+<summary>채팅</summary>
+<img width="1261" height="706" alt="image" src="https://github.com/user-attachments/assets/6bf7aaab-8ed9-4a39-8c7d-cfdc9298e022" />
+<img width="1267" height="711" alt="image" src="https://github.com/user-attachments/assets/4de94723-b673-4227-a8e1-dddd4ab72a0e" />
+
+
+</details> 
+
 
 # 6. 시스템 구성도
 <img width="1205" height="667" alt="image" src="https://github.com/user-attachments/assets/5605947d-b8b7-4a82-83de-6f8ecc1b569f" />
