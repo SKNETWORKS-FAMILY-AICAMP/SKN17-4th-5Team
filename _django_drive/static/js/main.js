@@ -116,15 +116,18 @@ document.addEventListener('DOMContentLoaded', function(){
   
   function startTimer(timerElementId) {
     const timerDisplay = document.getElementById(timerElementId);
-    if (!timerDisplay) return;
-
+    console.log(timerElementId)
+    if (!timerDisplay) {
+      return;
+    }
+    
     // 기존 타이머가 있으면 정리
     if (timers[timerElementId]) {
       clearInterval(timers[timerElementId]);
     }
-
+    
     let timeLeft = 300; // 5분
-
+    
     timerDisplay.classList.remove("hidden");
     timerDisplay.style.color = "#000";
     timerDisplay.textContent = formatTime(timeLeft);
@@ -323,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const signupForm = document.getElementById('signupForm');
   const resetPwdForm = document.getElementById('resetPwdForm');
 
-  async function checkEmail(email, emailMessage, sendBtn) {
+  async function checkEmail(email, emailMessage, sendBtn, timerId) {
     const email_value = email.value.trim();
     try {
       const response = await fetch('/api/check-email/', {
@@ -352,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function(){
           emailMessage.classList.add('field-error');
         } else {
           emailVerified = true;
-          sendVerificationCode(email, emailMessage)
+          sendVerificationCode(email, emailMessage, timerId);
         }
       }
     } catch (error) {
@@ -385,11 +388,11 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   async function validateAndSendCode (form, sendBtn) {
     const email = form.elements['email'];
     const emailMessage = form.querySelector('[name="emailMessage"]');
     const timerId = form.querySelector('[name="timer"]').id;
-    
     if (!email.value) {
       emailMessage.textContent = '이메일을 입력해주세요.';
       return;
@@ -398,9 +401,9 @@ document.addEventListener('DOMContentLoaded', function(){
       emailMessage.textContent = '올바른 이메일 형식이 아닙니다.';
       return;
     }
-
+    
     if (!emailVerified) {
-      await checkEmail(email, emailMessage, sendBtn);
+      await checkEmail(email, emailMessage, sendBtn, timerId);
     } else {
       await sendVerificationCode(email, emailMessage, timerId);
     }
