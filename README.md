@@ -65,6 +65,11 @@
 
 <br>
 
+### 🔸프로젝트 목표 
+
+- 운전 중 발생할 수 있는 돌발상황이나 법규 혼란 상황에서 운전자의 신속하고 올바른 판단을 지원하는 주행 보조 AI 보이스봇·챗봇을 개발
+
+- 이를 통해 운전자는 상황별 맞춤형 음성 안내를 손쉽게 받아 안전하고 합리적인 결정을 내릴 수 있으며, 궁극적으로 운전 중 불안감 해소, 법규 숙지 향상, 사고 위험 감소를 실현하는 것을 목표로 함.
 
 # 3. WBS
 <img width="1822" height="722" alt="image" src="https://github.com/user-attachments/assets/e0825cd3-c2a4-4e6e-a184-3e6acbafc237" />
@@ -78,6 +83,15 @@
 <img width="1415" height="587" alt="image" src="https://github.com/user-attachments/assets/efaec212-c06f-4bd9-9445-ad083fe99379" />
 
 # 5. 화면설계서
+
+<details>
+<summary>회원가입</summary>
+ 
+<img width="1266" height="717" alt="image" src="https://github.com/user-attachments/assets/15b97dad-056d-4fdb-8a3e-06800b5dabfa" />
+
+
+</details> 
+
 
 # 6. 시스템 구성도
 <img width="1205" height="667" alt="image" src="https://github.com/user-attachments/assets/5605947d-b8b7-4a82-83de-6f8ecc1b569f" />
@@ -126,9 +140,21 @@
 
 
 
-# 9. 수행결과 (테스트 및 시연 페이지) 
+# 9. 수행결과 (테스트 및 시연 페이지)
+
 
 # 10. 보완점 및 개선 방향 
+
+- 현재 프로젝트에 사용된 음성 인식(STT) 모델은 Google Chrome 브라우저에서만 작동함. 따라서, 모든 브라우저 환경에서 호환 가능한 STT 모델로 교체하는 것이 향후 확장성과 사용자 접근성을 위해 필요함.
+
+
+- 사용 중인 STT 모델은 HTTPS 환경에서만 마이크 입력을 허용하지만, 현재 EC2 서버 설정에서 이를 완전히 반영하지 못 함. 이로 인해, 우회 주소 설정을 하지 않으면 마이크 기능이 동작하지 않는 문제가 발생. 추후 SSL 인증서 적용 및 HTTPS 통신 환경 구축이 필요.
+
+
+- 이전 프로젝트에서 구축한 LLM을 이번 프로젝트에 통합하는 과정에서, 리서치 모드(Research Mode)에서 입력 프롬프트가 사용자에게 그대로 노출되는 문제가 발생. 또한, 시간적 제약으로 인해 리서치 모드의 프롬프트를 세밀히 조정하지 못해 응답의 구체성과 일관성이 낮아지는 한계가 있었음. 이번 프로젝트가 웹 구축에 집중된 만큼, 다음 단계에서는 LLM 응답 품질 개선 및 프롬프트 최적화 작업이 반드시 병행되어야 함.
+
+
+- 드라이브 모드(Drive Mode)에서 LLM의 응답 속도가 충분히 빠르지 못하며, TTS(Text-to-Speech) 출력이 추가되어 전체 응답 시간이 길어지는 문제가 있었음. 이는 사용자 경험(UX)에 직접적인 영향을 미치므로, LLM 응답 최적화 및 음성 출력 모듈의 속도 개선을 할 예정.
 
 # 11. 한 줄 회고
 <table>
