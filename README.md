@@ -111,12 +111,14 @@
 [화면설계서](https://docs.google.com/presentation/d/1MdszU2GmV72n2g4GLHQj0Kso5_v7MTJ8/edit?usp=sharing&ouid=105117462163362033500&rtpof=true&sd=true)
 
 # 6. 시스템 구성도
+> 수정정
 <img width="1205" height="667" alt="image" src="https://github.com/user-attachments/assets/5605947d-b8b7-4a82-83de-6f8ecc1b569f" />
 <img width="645" height="468" alt="ERD" src="https://github.com/user-attachments/assets/0d8ef6f1-c93a-4b52-8ded-e131e81d8a82" />
 
 
 
 # 7. 기술 스택
+> 웹 프레임워크에 html 위치 변경, RDS Database는 어떻게 넣어야 할까? 
 
 | 분야                   | 기술 및 라이브러리 |
 |------------------------|------------------|
