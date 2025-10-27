@@ -29,6 +29,41 @@
 * 총 44명을 대상으로 본 프로젝트의 필요성에 관한 6개 항목 설문조사를 실시함.
 
 #### 설문 결과
+<p>
+  <img src="images/s_q1.png" width="600">
+</p>
+
+<p>
+  <img src="images/s_q2.png" width="600">
+</p>
+
+<p>
+  <img src="images/s_q3.png" width="600">
+</p>
+
+<p>
+  <img src="images/s_q4.png" width="600">
+  <ul>
+  <li>‘가끔 있다’ 단일 항목만 과반이 넘어감</li>
+  <li>'자주 있다’와 ‘매우 자주 있다’도 도합 30%가 넘어감</li>
+  </ul>
+</p>
+
+
+<p>
+  <img src="images/s_q5.png" width="600">
+  <ul>
+  <li>‘가끔 있다’ 단일 항목만 과반이 넘어감</li>
+  <li>‘유용하다’와 ‘매우 유용하다’가 도합 80%를 넘아감</li>
+  </ul>
+</p>
+
+<p>
+  <img src="images/s_q6.png" width="600">
+</p>
+
+
+<br>
 
 
 # 3. WBS
