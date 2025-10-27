@@ -112,6 +112,8 @@
 
 # 6. 시스템 구성도
 <img width="1205" height="667" alt="image" src="https://github.com/user-attachments/assets/5605947d-b8b7-4a82-83de-6f8ecc1b569f" />
+<img width="645" height="468" alt="ERD" src="https://github.com/user-attachments/assets/0d8ef6f1-c93a-4b52-8ded-e131e81d8a82" />
+
 
 
 # 7. 기술 스택
