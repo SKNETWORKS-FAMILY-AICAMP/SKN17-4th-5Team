@@ -54,6 +54,8 @@
 # 6. 화면설계서
 
 # 7. WBS
+<img width="1822" height="722" alt="image" src="https://github.com/user-attachments/assets/e0825cd3-c2a4-4e6e-a184-3e6acbafc237" />
+
 
 # 8. 테스트 계획 및 결과 보고서
 
