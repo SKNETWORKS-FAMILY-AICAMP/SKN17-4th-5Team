@@ -103,6 +103,29 @@
 
 # 8. 테스트 계획 및 결과 보고서
 
+<details>
+<summary>계정 로그인</summary>
+ 
+<img width="708" height="504" alt="image" src="https://github.com/user-attachments/assets/cbb5aa49-4e74-450f-9d5e-ba4850ef857f" />
+
+</details> 
+
+<details>
+<summary>회원정보 관리</summary>
+ <img width="714" height="791" alt="image" src="https://github.com/user-attachments/assets/4ea3d1e9-9539-4f3e-b985-574868961610" />
+ <img width="713" height="621" alt="image" src="https://github.com/user-attachments/assets/2b4c36ef-2e96-4d85-be6d-dba85378bac8" />
+
+
+</details> 
+
+<details>
+<summary>채팅</summary>
+<img width="614" height="347" alt="image" src="https://github.com/user-attachments/assets/b17a0459-c3ac-49cb-947c-9036aa911dac" />
+
+</details> 
+
+
+
 # 9. 수행결과 (테스트 및 시연 페이지) 
 
 # 10. 보완점 및 개선 방향 
