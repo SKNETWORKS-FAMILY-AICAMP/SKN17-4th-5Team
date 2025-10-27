@@ -158,6 +158,10 @@
 
 
 # 9. 수행결과 (테스트 및 시연 페이지)
+<img width="835" height="453" alt="image" src="https://github.com/user-attachments/assets/83c2de0a-af46-4e7a-b2b3-001e6ed5b211" />
+<img width="824" height="463" alt="image" src="https://github.com/user-attachments/assets/dd6f2ee7-c4fc-4d75-919c-53b13939868d" />
+<img width="827" height="444" alt="image" src="https://github.com/user-attachments/assets/48674d29-a9a1-4302-bfe6-638c8441fbe0" />
+
 
 
 
@@ -186,7 +190,7 @@
   </tr>
   <tr>
     <th>이가은</th>
-    <td>KPT에 맞춰서 작성 부탁</td>
+    <td>웹 ui를 설계하고 여러문제를 겪으며, UI는 정상 동작뿐 아니라 모든 에러 케이스가 동시에 발생하는 최악의 상황'까지 고려해 설계해야 한다는 것을 배웠고, HTML 구조 변경 시 JavaScript의 셀렉터가 동기화되지 않으면 기능이 깨진다는 점에서 프론트엔드 세 요소의 긴밀한 의존성을 체감했습니다.</td>
   </tr>
   <tr>
     <th>한 훈</th>
