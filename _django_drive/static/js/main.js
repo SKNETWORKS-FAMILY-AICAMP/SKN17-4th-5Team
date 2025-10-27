@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function(){
       clearInterval(timers[timerElementId]);
     }
     
-    let timeLeft = 10; // 5분
+    let timeLeft = 300; // 5분
     
     timerDisplay.classList.remove("hidden");
     timerDisplay.style.color = "#000";
