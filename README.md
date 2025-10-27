@@ -42,6 +42,14 @@
 
 # 5. 요구사항 정의서
 
+🔸**회원정보 관련**
+<img width="1421" height="379" alt="image" src="https://github.com/user-attachments/assets/bf0ab87a-61e9-4fe4-b7e3-48c06f0f55b2" />
+
+🔸**채팅 관련**
+<img width="1417" height="588" alt="image" src="https://github.com/user-attachments/assets/4c84ca4d-64e3-4bb3-8821-fc9dee6af01e" />
+
+
+
 # 6. 화면설계서
 
 # 7. WBS
