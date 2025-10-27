@@ -48,8 +48,9 @@ document.addEventListener('DOMContentLoaded', function(){
   const signupBtn = document.getElementById('signupBtn');
   const profileBtn = document.getElementById('profileBtn');
   const changePwdBtn = document.getElementById('changePwdBtn');
-  const withdrawBtn = document.getElementById('withdrawBtn');
   const changePwdModal = document.getElementById('changePwdModal');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+
 
   const modalBackdrop = document.getElementById('modalBackdrop');
   const loginModal = document.getElementById('loginModal');
@@ -896,114 +897,83 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 
+  // 탈퇴 버튼 클릭
+  if (withdrawBtn) {
+    withdrawBtn.addEventListener('click', () => {
+      console.log('탈퇴 버튼 클릭됨');
+      if (profileModal) profileModal.classList.add('hidden');
+      if (withdrawModal) {
+        withdrawModal.classList.remove('hidden');
+        modalBackdrop.classList.remove('hidden');
+      }
+      if (withdrawPassword) withdrawPassword.value = '';
+      if (withdrawError) withdrawError.classList.add('hidden');
+    });
+  }
 
+  // 탈퇴 폼 제출 (비밀번호 검증)
+  if (withdrawForm) {
+    withdrawForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = withdrawPassword.value;
+      try {
+        const res = await fetch('/api/verify-password/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          withdrawModal.classList.add('hidden');
+          withdrawConfirmModal.classList.remove('hidden');
+          modalBackdrop.classList.remove('hidden');
+        } else {
+          withdrawError.textContent = data.message || '비밀번호가 일치하지 않습니다.';
+          withdrawError.classList.remove('hidden');
+        }
+      } catch (error) {
+        withdrawError.textContent = '서버 오류가 발생했습니다.';
+        withdrawError.classList.remove('hidden');
+      }
+    });
+  }
+
+  // 탈퇴 확인 모달 (확인 버튼)
+  window.confirmWithdrawAction = async function() {
+    try {
+      const res = await fetch('/api/withdraw/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if (data.success) {
+        withdrawConfirmModal.classList.add('hidden');
+        withdrawSuccessModal.classList.remove('hidden');
+        modalBackdrop.classList.remove('hidden');
+      } else {
+        alert(data.message || '탈퇴 처리 실패');
+      }
+    } catch (error) {
+      alert('서버 오류로 탈퇴 실패');
+    }
+  };
+
+  // 탈퇴 취소 버튼
+  window.closeWithdrawConfirm = function() {
+    withdrawConfirmModal.classList.add('hidden');
+    modalBackdrop.classList.add('hidden');
+  };
+
+  // 탈퇴 완료 후 홈으로 이동
+  window.goToHome = function() {
+    window.location.href = '/';
+  };
 
 });
 // 여까지가 둠
 
 
-// 탈퇴 버튼 클릭 (프로필 모달에서) 
-if(withdrawBtn) {
-  withdrawBtn.addEventListener('click', () => {
-    console.log('탈퇴 버튼 클릭됨');
-    
-    if(profileModal) {
-      profileModal.classList.add('hidden');
-    }
-    
-    if(withdrawModal) {
-      withdrawModal.classList.remove('hidden');
-      modalBackdrop.classList.remove('hidden');
-    }
-    
-    // 폼 초기화
-    if(withdrawPassword) {
-      withdrawPassword.value = '';
-    }
-    if(withdrawError) {
-      withdrawError.classList.add('hidden');
-    }
-  });
-}
 
-// 탈퇴 폼 제출 - 비밀번호 확인
-if(withdrawForm) {
-  withdrawForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const password = withdrawPassword.value;
-    
-    try {
-      const response = await fetch('/api/verify-password/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: password })
-      });
-      
-      const data = await response.json();
-      
-      if(data.success) {
-        withdrawModal.classList.add('hidden');
-        withdrawConfirmModal.classList.remove('hidden');
-        modalBackdrop.classList.remove('hidden');
-      } else {
-        withdrawError.textContent = data.message || '비밀번호가 일치하지 않습니다.';
-        withdrawError.classList.remove('hidden');
-      }
-    } catch(error) {
-      withdrawError.textContent = '오류가 발생했습니다.';
-      withdrawError.classList.remove('hidden');
-    }
-  });
-}
-
-// 탈퇴 확인 모달 닫기
-function closeWithdrawConfirm() {
-  const withdrawConfirmModal = document.getElementById('withdrawConfirmModal');
-  const modalBackdrop = document.getElementById('modalBackdrop');
-
-  if(withdrawConfirmModal) {
-    withdrawConfirmModal.classList.add('hidden');
-  }
-  if(modalBackdrop) {
-    modalBackdrop.classList.add('hidden');
-  }
-}
-
-// 실제 탈퇴 처리
-async function confirmWithdrawAction() {
-  try {
-    const response = await fetch('/api/withdraw/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    const data = await response.json();
-    
-    if(data.success) {
-      closeWithdrawConfirm();
-      const withdrawSuccessModal = document.getElementById('withdrawSuccessModal');
-      const modalBackdrop = document.getElementById('modalBackdrop');
-      
-      if(withdrawSuccessModal) {
-        withdrawSuccessModal.classList.remove('hidden');
-        modalBackdrop.classList.remove('hidden');
-      }
-    } else {
-      alert(data.message || '탈퇴 처리 중 오류가 발생했습니다.');
-      closeWithdrawConfirm();
-    }
-  } catch(error) {
-
-    alert('오류가 발생했습니다.');
-    closeWithdrawConfirm();
-  }
-}
-
-// 홈으로 이동
-function goToHome() {
-  window.location.href = '/';
-}
 
 // 음성 입력 기능 (STT)
 let recognition;
