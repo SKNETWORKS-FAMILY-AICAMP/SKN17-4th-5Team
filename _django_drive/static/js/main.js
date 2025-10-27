@@ -366,8 +366,8 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   
   // 인증번호 발송
-  const verify = false;
-  async function sendVerificationCode(email, emailMessage, timerId) {
+  let verify = false;
+  async function sendVerificationCode(email, emailMessage, sendBtn, timerId) {
     verify = false;
     sendBtn.disabled = true;
     const email_value = email.value.trim();
