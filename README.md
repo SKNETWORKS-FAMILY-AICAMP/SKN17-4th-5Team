@@ -23,21 +23,17 @@
 
 # 3. 기술 스택
 
-| 카테고리 | 기술 스택 |
-|----------|-------------------------------------------|
-| **임베딩 모델** | ![nlpai-lab/KURE-v1](https://img.shields.io/badge/nlpai%20lab/KURE%20v1-8C9E90?style=for-the-badge&logo=nlpai-lab/KURE-v1&logoColor=white) |
-| **모델 튜닝/학습 프레임워크** | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![Transformers](https://img.shields.io/badge/Transformers-FFCC00?style=for-the-badge&logo=HuggingFace&logoColor=black) ![LoRA](https://img.shields.io/badge/LoRA-F76D57?style=for-the-badge&logo=HuggingFace&logoColor=white) |
-
-
 | 분야                   | 기술 및 라이브러리 |
 |------------------------|------------------|
 | **프로그래밍 언어 & 개발환경** | ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black) ![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white) ![Jupyter](https://img.shields.io/badge/Jupyter-%23FA0F00.svg?style=for-the-badge&logo=Jupyter&logoColor=white) ![RunPod](https://img.shields.io/badge/RunPod-FF4154?style=for-the-badge&logo=runpod&logoColor=white) |
 | **웹 프레임워크** | ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white) |
+| **임베딩 모델** | ![nlpai-lab/KURE-v1](https://img.shields.io/badge/nlpai%20lab/KURE%20v1-8C9E90?style=for-the-badge&logo=nlpai-lab/KURE-v1&logoColor=white) |
+| **모델 튜닝/학습 프레임워크** | ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white) ![Transformers](https://img.shields.io/badge/Transformers-FFCC00?style=for-the-badge&logo=HuggingFace&logoColor=black) ![LoRA](https://img.shields.io/badge/LoRA-F76D57?style=for-the-badge&logo=HuggingFace&logoColor=white) |
 | **LLM 체인 및 자연어 처리** | ![LangChain](https://img.shields.io/badge/LangChain-005F73?style=for-the-badge&logo=LangChain&logoColor=white) |
 | **AI 모델** | ![naver-hyperclovax](https://img.shields.io/badge/naver%20hyperclovax-FFB000?style=for-the-badge&logo=naver-hyperclovax&logoColor=white) |
 | **데이터베이스 및 임베딩** | ![Chroma](https://img.shields.io/badge/Chroma-009688?style=for-the-badge&logo=Apache&logoColor=white) |
 | **환경변수 관리** | ![python-dotenv](https://img.shields.io/badge/python_dotenv-000000?style=for-the-badge&logo=Python&logoColor=white) |
-| **서버** | ![nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) ![Gunicorn](https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=Gunicorn&logoColor=white) |
+| **서버** |  |
 | **인프라 및 배포** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Amazon AWS](https://img.shields.io/badge/Amazon%20AWS-232F3E?style=for-the-badge&logo=Amazon%20AWS&logoColor=white) |
 | **협업 및 형상관리** | ![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) |
 
