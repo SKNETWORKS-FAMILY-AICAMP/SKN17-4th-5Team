@@ -35,6 +35,8 @@
 # 5. 화면설계서
 
 # 6. 시스템 구성도
+<img width="1205" height="667" alt="image" src="https://github.com/user-attachments/assets/5605947d-b8b7-4a82-83de-6f8ecc1b569f" />
+
 
 # 7. 기술 스택
 
