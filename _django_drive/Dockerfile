@@ -12,4 +12,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-CMD [ "gunicorn", "django_docker.wsgi:application", "--config", "gunicorn.conf.py" ]
+CMD [ "gunicorn", "_django_drive.wsgi:application", "--config", "gunicorn.conf.py" ]
