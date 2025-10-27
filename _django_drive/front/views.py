@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password, make_password
-import os, requests, json, random, re
+import os, requests, json, random, re, string
 from django.db import connection
 from dotenv import load_dotenv
 from django.core.mail import send_mail
@@ -395,7 +395,10 @@ def send_code(request):
 
     # 인증 코드 code에 로직 넣으면 됨
     # code = str(random.randint(10000000, 99999999))
-    code = '0000'
+    def generate_random_code(length):
+        chars = string.ascii_letters + string.digits  # 알파벳 대소문자 + 숫자
+        return ''.join(random.choice(chars) for _ in range(length))
+    code = generate_random_code(8)
     cache.set(email, {"code": code}, timeout=300)
 
     try:
@@ -408,7 +411,7 @@ def send_code(request):
     except Exception as e:
         return JsonResponse({"error": f"메일 발송 실패: {str(e)}"}, status=500)
 
-    return JsonResponse({"message": "인증번호가 이메일로 전송되었습니다.", "success": "success"})
+    return JsonResponse({"message": "인증번호가 이메일로 전송되었습니다.", "success": True})
 
 # 인증 번호 인증 
 @csrf_exempt
