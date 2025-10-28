@@ -8,7 +8,7 @@
 ### 🔸팀원 소개
 | [@임길진](https://github.com/LGJ0405)                      | [@박민정](https://github.com/minjeon)                       |  [@이가은](https://github.com/Leegaeune)                       | [@한 훈](https://github.com/Hoonieboogie)                       |
 |---------------------------------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|
-| ![image2](https://github.com/user-attachments/assets/8cd8826f-16ab-4e4f-b12c-9cd1acb7fadd) | ![image3](https://github.com/user-attachments/assets/2eaa1afa-88d4-4297-b9a1-5b03f7269e3d) | ![image1](https://github.com/user-attachments/assets/37240268-067b-4391-8e6c-481517364a9f) | ![image0](https://github.com/user-attachments/assets/f51bbd34-a5a9-4358-8490-6d6db4ffff86) |
+| <img src="images/image2.jpg"> | <img src="images/image3.jpg"> | <img src="images/image1.jpg"> | <img src="images/image0.jpg"> |
 
 
 # 2. 프로젝트 개요
@@ -19,7 +19,7 @@
 
 ### 🔸프로젝트 배경
 
-| <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/03f97e35-3e32-40b7-a8b1-1383ab04765d" /> | <img width="822" height="500" alt="image" src="https://github.com/user-attachments/assets/e47ecf3f-6de8-41f2-bf94-b4bd96bf78ff" />|
+| <img width="800" height="400" alt="image" src="images/프로젝트배경1.png" /> | <img width="822" height="500" alt="image" src="images/프로젝트배경2.png" />|
 |---------------------------|---------------------------|
 | - 자동차 고장·사고 시 당황으로 인한 2차 사고 위험 <br><br> - 교통 사고 2차 사고 치사율은 일반 교통 사고의 약 6배에 달하는 54% <br><br> - "고속도로 한복판에서 시동 꺼진 차량, 운전자가 대처 방법 몰라 뒤따라오던 차량과 추돌" 과 같은 기사 자주 보도 <br><br> 출처 : ["고속도로 교통사고 사망자 5명 중 1명 2차 사고로 사망"](https://www.yna.co.kr/view/AKR20240319052900053) / ["안전무지가 2차 사고 불러"](https://www.yna.co.kr/view/AKR20171213165200797) | - 초보 운전자들의 돌발 상황 대처 능력 부족 <br><br> - 커뮤니티(네이버 지식인 등)에 운전 관련 질문이 반복적으로 게시 <br><br> 출처 : [네이버 지식인](https://kin.naver.com/index.nhn?mobile) |
 
@@ -72,48 +72,48 @@
 - 이를 통해 운전자는 상황별 맞춤형 음성 안내를 손쉽게 받아 안전하고 합리적인 결정을 내릴 수 있으며, 궁극적으로 운전 중 불안감 해소, 법규 숙지 향상, 사고 위험 감소를 실현하는 것을 목표로 함.
 
 # 3. WBS
-<img width="1822" height="722" alt="image" src="https://github.com/user-attachments/assets/e0825cd3-c2a4-4e6e-a184-3e6acbafc237" />
+<img width="1822" height="722" alt="image" src="images/wbs.png" />
 
 # 4. 요구사항 정의서
 
 🔸**회원정보 관련**
-<img width="1421" height="379" alt="image" src="https://github.com/user-attachments/assets/bf0ab87a-61e9-4fe4-b7e3-48c06f0f55b2" />
+<img width="1421" height="379" alt="image" src="images/요구사항정의서1.png" />
 
 🔸**채팅 관련**
-<img width="1415" height="587" alt="image" src="https://github.com/user-attachments/assets/efaec212-c06f-4bd9-9445-ad083fe99379" />
+<img width="1415" height="587" alt="image" src="images/요구사항정의서2.png" />
 
 # 5. 화면설계서
 
 <details>
 <summary>회원가입</summary>
-<img width="1266" height="717" alt="image" src="https://github.com/user-attachments/assets/15b97dad-056d-4fdb-8a3e-06800b5dabfa" />
+<img width="1266" height="717" alt="회원가입" src="images/화면설계서1_회원가입.png" />
 </details> 
 
 <details>
 <summary>로그인</summary>
-<img width="1266" height="709" alt="image" src="https://github.com/user-attachments/assets/b3cb45fa-6467-4fbe-a07a-66a4d6b5213e" />
+<img width="1266" height="709" alt="로그인" src="images/화면설계서2_로그인.png" />
 </details> 
 
 <details>
 <summary>회원정보 수정</summary>
-<img width="1273" height="710" alt="image" src="https://github.com/user-attachments/assets/c6b32103-dd9c-486f-abcf-1330dee4e8df" />
-<img width="1271" height="713" alt="image" src="https://github.com/user-attachments/assets/bdb9fc05-ca34-417d-b137-acc7e908999c" />
-<img width="1263" height="710" alt="image" src="https://github.com/user-attachments/assets/6f2caf48-110a-4804-ae03-4d2a4249e1c2" />
-<img width="1265" height="711" alt="image" src="https://github.com/user-attachments/assets/82a1639d-544f-4c1c-9807-0ba6582ef7c9" />
+<img width="1273" height="710" alt="회원정보" src="images/화면설계서3-1_회원정보.png" />
+<img width="1271" height="713" alt="비밀번호변경" src="images/화면설계서3-2_비밀번호변경.png" />
+<img width="1263" height="710" alt="비밀번호재설정" src="images/화면설계서3-3_비밀번호재설정.png" />
+<img width="1265" height="711" alt="회원탈퇴" src="images/화면설계서3-4_회원탈퇴.png" />
 </details> 
 
 <details>
 <summary>채팅</summary>
-<img width="1261" height="706" alt="image" src="https://github.com/user-attachments/assets/6bf7aaab-8ed9-4a39-8c7d-cfdc9298e022" />
-<img width="1267" height="711" alt="image" src="https://github.com/user-attachments/assets/4de94723-b673-4227-a8e1-dddd4ab72a0e" />
+<img width="1261" height="706" alt="채팅" src="images/화면설계서4-1_채팅.png" />
+<img width="1267" height="711" alt="채팅로그" src="images/화면설계서4-2_채팅로그.png" />
 </details> 
 
 [화면설계서](https://docs.google.com/presentation/d/1MdszU2GmV72n2g4GLHQj0Kso5_v7MTJ8/edit?usp=sharing&ouid=105117462163362033500&rtpof=true&sd=true)
 
 # 6. 시스템 구성도
-> 수정정
-<img width="1205" height="667" alt="image" src="https://github.com/user-attachments/assets/5605947d-b8b7-4a82-83de-6f8ecc1b569f" />
-<img width="645" height="468" alt="ERD" src="https://github.com/user-attachments/assets/0d8ef6f1-c93a-4b52-8ded-e131e81d8a82" />
+<!-- 수정 전 -->
+<img width="1205" height="667" alt="image" src="images/시스템 구성도.png" />
+<img width="645" height="468" alt="ERD" src="images/ERD.png" />
 
 
 
@@ -174,30 +174,30 @@
 <details>
 <summary>계정 로그인</summary>
  
-<img width="708" height="504" alt="image" src="https://github.com/user-attachments/assets/cbb5aa49-4e74-450f-9d5e-ba4850ef857f" />
+<img width="708" height="504" alt="계정 로그인" src="images/테스트계획1.png" />
 
 </details> 
 
 <details>
 <summary>회원정보 관리</summary>
- <img width="714" height="791" alt="image" src="https://github.com/user-attachments/assets/4ea3d1e9-9539-4f3e-b985-574868961610" />
- <img width="713" height="621" alt="image" src="https://github.com/user-attachments/assets/2b4c36ef-2e96-4d85-be6d-dba85378bac8" />
+ <img width="714" height="791" alt="회원정보 관리 1" src="images/테스트계획2-1.png" />
+ <img width="713" height="621" alt="시연3" src="images/테스트계획2-2.png" />
 
 
 </details> 
 
 <details>
 <summary>채팅</summary>
-<img width="614" height="347" alt="image" src="https://github.com/user-attachments/assets/b17a0459-c3ac-49cb-947c-9036aa911dac" />
+<img width="614" height="347" alt="image" src="images/테스트계획3.png" />
 
 </details> 
 
 
 
 # 9. 수행결과 (테스트 및 시연 페이지)
-<img width="835" height="453" alt="image" src="https://github.com/user-attachments/assets/83c2de0a-af46-4e7a-b2b3-001e6ed5b211" />
-<img width="824" height="463" alt="image" src="https://github.com/user-attachments/assets/dd6f2ee7-c4fc-4d75-919c-53b13939868d" />
-<img width="827" height="444" alt="image" src="https://github.com/user-attachments/assets/48674d29-a9a1-4302-bfe6-638c8441fbe0" />
+<img width="835" height="453" alt="image" src="images/수행결과1.png" />
+<img width="824" height="463" alt="image" src="images/수행결과2.png" />
+<img width="827" height="444" alt="image" src="images/수행결과3.png" />
 
 
 
